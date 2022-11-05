@@ -1,0 +1,66 @@
+page-foodpost {
+
+    // ::-webkit-scrollbar {
+    //     width: 0px;
+    //     background: transparent; /* make scrollbar transparent */
+    // }
+
+    // ion-header[transparent] .toolbar-background { background: transparent;}
+
+ 
+    .orderdetails{
+        width:95%;
+        min-height:200px;
+        margin:auto;
+        border-radius: 20px;
+        background: linear-gradient(to right,rgb(252, 252, 252),white);
+        box-shadow:0px 5px 20px 8px rgba(0, 0, 0, 0.08); 
+        color:rgb(29, 29, 29);
+        opacity: 0;
+        transition: all 1s;
+        transform: translateY(50px);
+        animation-name: rev;
+        animation-delay: 0.1s;
+        animation-duration: 0.2s;
+        animation-timing-function: ease-out;
+        animation-fill-mode: forwards;
+    }
+
+    .order-details-line{
+    width:100%; height:20px; padding:0px; margin:5px; margin-top:10px; box-sizing: border-box; border-bottom:1px dashed rgb(204, 204, 204);
+    }
+
+    .order-details-text{
+        height:22px; background: rgb(252, 252, 252); 
+        width:auto;
+        font-size:14px;
+        padding:1px;
+        }
+
+        .order-details-value{
+            height:22px; background: white; 
+            width:auto;
+            font-size:11px;
+            padding:1px;
+            color:rgb(219, 22, 81);
+            }
+
+            .swiper-pagination-bullet-active {
+                background: #ca1b41;
+                opacity: 1;
+            }
+            
+           button.swiper-pagination-bullet {
+                border: 0.3px solid white;
+            }
+
+    @keyframes rev{
+        0%{ opacity: 0; }
+        40%{ opacity: 0.8; } 
+        90%{  opacity: 0.99; }
+        95%{ transform: translateY(0px); }
+        100%{ opacity: 1; transform: translateY(5px); }
+    }
+
+
+}

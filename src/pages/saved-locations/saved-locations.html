@@ -1,0 +1,82 @@
+<ion-header no-border>
+  <ion-navbar>
+      <ion-buttons left>
+          <button ion-button icon-only clear color="dark" (click)="close();"><ion-icon name="close"></ion-icon></button>
+        </ion-buttons>
+    <ion-title text-center class="my-toolbar">
+      <span *ngIf="selection">select a location</span>
+      <span *ngIf="!selection">saved locations</span> 
+    </ion-title>
+    <ion-buttons  right>
+      <button *ngIf="selectedLocation && selection; else add;" color="mycolor" small [disabled]="!selectedLocation" ion-button (click)="useLocation()">confirm</button>
+      <ng-template #add>
+        <button ion-button clear color="mycolor" (click)="goLocationPage()"><ion-icon name="add"></ion-icon> Add</button>
+      </ng-template>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+
+  <ion-list *ngIf="selection; else viewloc;" text-center padding no-lines radio-group [(ngModel)]="selectedLocation">
+    <ion-item class="block" *ngFor="let SL of (savedLocations | async)?.slice().reverse(); let id = index" style="min-height:100px; height: auto; margin-top:10px; width:100%; transition: all 0.5s;
+    border:1px solid #dadada; border-radius:10px; overflow: hidden; ">
+      <ion-label>
+          <span style="color: #5b5b5b;"><ion-icon small name="pin"></ion-icon> {{SL.title}}</span>
+      </ion-label>
+      <div item-content class="address-content"> 
+        <span *ngIf="SL.subAddress; let subaddr;">{{subaddr}}<br /></span>{{ SL.address }}</div>
+      <ion-radio [value]="SL"></ion-radio>
+    </ion-item>
+  </ion-list>
+
+  <div text-center *ngIf="selectedLocation">
+      <span style="color:rgb(146, 145, 145); font-size:10px;">wanna add a new location ? </span>
+     <button ion-button clear small (click)="goLocationPage()">
+       <ion-icon name="add"></ion-icon> Add
+     </button>
+   </div>
+
+  <ng-template #viewloc>
+  <div *ngIf="savedLocations | async; else load; let savedLocations;">
+    <ion-card mode="ios" *ngFor="let sl of savedLocations.slice().reverse()">
+
+      <ion-item mode="ios" no-lines> 
+          <span style="color: #5b5b5b;"><ion-icon small name="pin"></ion-icon> {{sl?.title}}</span>
+        <ion-buttons left item-end>
+            <button ion-button small clear icon-only style="color: #bd576e;" (click)="editLocation(sl.key,sl.title,sl.subAddress)">
+                <ion-icon *ngIf="sl?.subAddress" name="create"></ion-icon>
+                <ion-icon *ngIf="!sl?.subAddress" name="add"></ion-icon>                
+              </button>
+          <button ion-button small clear icon-only style="color: #bd576e;" (click)="deleteLocation(sl.key)">
+            <ion-icon name="trash"></ion-icon>
+          </button>
+        </ion-buttons>
+      </ion-item>
+      <ion-card-content>
+          <em style="color: #9d9c9c; font-size: 1.2rem;" *ngIf="sl?.subAddress; let subaddr;">{{subaddr}}<br /></em>  {{sl?.address}}
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <ng-template #load>
+    <div text-center>
+      <ion-spinner></ion-spinner> Loading...
+    </div>
+  </ng-template>
+</ng-template>
+
+
+  <div *ngIf="(savedLocations | async)?.length == 0" text-center>
+    <div class="faded" style="margin:50px auto; background-size:cover; width:150px; height:150px; background-image:url(./assets/imgs/vector-location.png);">   
+    </div>
+    <div class="faded" style="
+  font-size: 11px;
+  color: #aaaaaa;
+  font-weight: 900;
+  padding: 4px 20px;
+">Save Your locations once to use them as reference when required.<br/>Alse add more address details for better response.
+  </div>
+  </div>
+
+</ion-content>

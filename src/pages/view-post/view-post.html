@@ -1,0 +1,216 @@
+<ion-header no-border>
+
+  <ion-navbar no-border class="ios">
+    <ion-title>
+      <span *ngIf="(food | async)?.postEnded; else act;">Inactive Post</span>
+      <ng-template #act>Active Post</ng-template>
+    </ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+  <div *ngIf="food | async; else po; let food;">
+
+    <ion-scroll text-center scrollX="true" direction="x" style="overflow: scroll;
+      margin: 10px 0 10px 0;
+      height: 155px;
+      white-space: nowrap;
+      border: 2px dashed #eae6e6;
+      background: #f2f2f2;
+      border-left: none;
+      border-right: none;
+      box-sizing: content-box;">
+      <div *ngFor="let img of food.photos"
+        style="display: inline-block; height:145px; width: 145px; background-color: #f0e0e0; margin:5px 0 5px 5px; border-radius:5px; overflow: hidden; ">
+        <img src="{{img}}" height="100%" />
+      </div>
+    </ion-scroll>
+
+    <div class="post-detail">
+      <span class="post-detail-title">Title</span>
+      <span class="post-detail-value">
+        {{ food.type + " " + food.name }}
+      </span>
+    </div>
+
+    <div class="post-detail">
+      <span class="post-detail-title">Posted At</span>
+      <span class="post-detail-value">
+        {{ food.postedAt | date: 'MMM d, y, h:mm a'}}
+      </span>
+    </div>
+
+
+    <div class="post-detail">
+      <span class="post-detail-title">Post Status</span>
+      <span class="post-detail-value">
+        <span *ngIf="!food.postEnded && availability(food.availableTill)">
+          <span *ngIf="food.availability" style="color:rgb(30, 173, 30);">Available</span>
+          <span *ngIf="!food.availability" style="color:rgb(204, 5, 15);">Unavailable</span>
+        </span>
+        <span *ngIf="food.postEnded || !availability(food.availableTill)"
+          style="color:#ee8d1d; border-radius: 2px; padding:2px; border:1px solid #ee8d1d;">CLOSED</span>
+      </span>
+    </div>
+
+    <div class="post-detail">
+        <span class="post-detail-title">Available Till</span>
+        <span class="post-detail-value">
+          {{ food.availableTill | date: 'MMM d, y, h:mm a'}}
+        </span>
+      </div>
+
+    <div class="post-detail">
+      <span class="post-detail-title">Location</span>
+      <span class="post-detail-value">
+        <ion-icon name="pin"></ion-icon> {{food.foodLocation?.subAddress || ''}} {{food.foodLocation?.address || 'location may have been removed.'}}
+      </span>
+    </div>
+
+    <div class="post-detail">
+      <span class="post-detail-title">Serves per plate</span>
+      <span class="post-detail-value">
+        {{food.serves}}
+      </span>
+    </div>
+
+
+    <div class="post-detail">
+      <span class="post-detail-title">Price per plate</span>
+      <span class="post-detail-value rupee">
+        {{ food.price }}
+      </span>
+    </div>
+
+
+    <div class="post-detail">
+      <span class="post-detail-title">Plates</span>
+      <span class="post-detail-value">
+        {{ food.platesLeft  }} / {{ food.platesTotal }}
+      </span>
+    </div>
+
+    <div class="post-detail">
+      <span class="post-detail-title">Tags</span>
+      <span class="post-detail-value">
+        <span *ngFor="let tag of food.tags"> #{{tag}}</span>
+        <span *ngIf="food.tags?.length < 1">None</span>
+      </span>
+    </div>
+
+    <div class="post-detail">
+      <div class="post-detail-title">Post Actions</div>
+      <div *ngIf="food.postEnded; else postact;" style="color:grey;">Post has been closed for any actions.</div>
+      <ng-template #postact>
+        <div>
+          <button *ngIf="food.availability" ion-button small round color="danger" mode="ios"
+            (click)="makeUnavailable()">Make Unavailable</button>
+          <button *ngIf="!food.availability" ion-button small round mode="ios" color="secondary"
+            (click)="makeAvailable()">Make Available</button>
+          <button ion-button small outline mode="ios" color="myorange" (click)="endPost()">CLOSE</button>
+        </div>
+      </ng-template>
+    </div>
+
+
+  </div>
+
+  <br />
+
+  <div text-center *ngIf="!showOrders && (orders | async)?.length > 0">
+    <button ion-button clear mode="ios" (click)="showAllOrders()">
+     <span style="text-decoration:underline;">Show all orders </span>
+    </button>
+  </div>
+
+  <div text-center *ngIf="(orders | async)?.length < 1" style="color:rgb(156, 48, 66); font-size: 12px;">
+    No orders for this post,try to market this post with people in your area.
+  </div>
+
+  <div *ngIf="showOrders" style="padding-top:10px; background:#fafafa; border-top:1px dashed rgb(202, 202, 202);">
+
+      <div text-center style="color:rgb(156, 48, 66); padding: 8px; font-size: 12px; font-weight: 900; text-decoration: underline;">
+         list of Buyers for this post
+        </div>
+
+    <div *ngFor="let order of orders | async" style=" margin-top:4px; ">
+      <button class="faded" *ngIf="order.ordersList | async; let or;" (click)="viewOrder(order.key,or.order.orderId)"
+        ion-item no-lines
+        style="background: rgb(253, 253, 253); border-radius:5px;  padding:0; width:100%; margin:auto;">
+        <div *ngIf="or.buyer | async; let buyer;">
+        <ion-grid item-end style="background: rgba(194, 196, 42, 0); padding:0;">
+            <ion-row>
+                <div  style="background: rgba(168, 46, 46, 0);
+                display: flex;
+                padding: 2px;
+                flex-direction: row;
+                align-items: center;
+                width: 100%;">
+
+                  <div style="    min-width: 40px;
+                  min-height: 40px;
+                  background-color: rgba(197, 197, 197, 0.76);
+                  border-radius: 100%;
+                  overflow: hidden;
+                  float: left;
+                  background-size: cover;"
+                    [style.background-image]="'url(' + (buyer[0]?.dp != null ? buyer[0]?.dp : './assets/imgs/default-user.png') + ')'"
+                    >
+                  </div>
+
+                  <div style="width:95%; background: rgba(61, 104, 221, 0); float:left; margin-left: 3px;">
+                    <div text-nowrap style="width: 100%;
+                    float: left;
+                    color: rgb(86, 86, 86);
+                    font-size: 15px;
+                    font-weight: 900;
+                    padding: 1px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;">{{buyer[0]?.name}}</div>
+                    <div text-nowrap style="width: 90%;
+                    font-size: 10px;
+                    color: rgb(172, 172, 172);
+                    padding: 1px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;">{{or.order?.locationObj?.address || 'contact buyer for their address.'}}</div>
+                  </div>
+                </div>
+              </ion-row>
+          <ion-row style="background:rgba(75, 188, 196, 0); padding:0;">
+            <ion-col>
+              <div style="background: rgba(196, 42, 42, 0); color:rgb(131, 131, 131); font-size: 12px;">
+                  <span *ngIf="or.order?.serviceType; let service;">
+                      <ion-icon *ngIf='service == "self"' name='ios-walk'></ion-icon>
+                      <ion-icon *ngIf='service == "delivery"' name='bicycle'></ion-icon> 
+                  </span>
+                •
+                <span style="color:#b42039;">{{ or.order.plates }} P</span> 
+                •
+                <span style="color:#b42039;" class="rupee">{{or.order.netPrice }} T</span>
+                •
+                <span *ngFor="let status of order.status | async; let lst = last;" style="color:rgb(163, 53, 77);">
+                  <span *ngIf="lst" style="font-size:12px;">
+                    {{ status[0].key}}<sup
+                      style="color:rgb(131, 131, 131); font-size:5px;">{{status[0].value | date: 'MMM d,y,h:mma'}}</sup>
+                  </span>
+                </span>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+      </button>
+    </div>
+
+
+  </div>
+
+  <br/><br/>
+
+
+
+
+</ion-content>

@@ -1,0 +1,42 @@
+page-notifications {
+
+    .card-ios {
+        margin: 12px;
+        border-radius: 8px;
+        width: calc(100% - 24px);
+        font-size: 1.4rem;
+        background: #ffffff;
+        -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 1px 5px rgba(102, 100, 100, 0.3);
+    }
+
+   .notif-title{
+        text-transform: uppercase;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #817e7e;
+    }
+
+    .card .note-md {
+        font-size: 1.1rem;
+    }
+
+    .notif-content{
+        font-size: 1.2rem;
+        color: #858282;
+    }
+    
+    .item {
+        margin: 12px;
+        margin-bottom: 0px;
+        border-radius: 8px;
+        width: calc(100% - 24px);
+        position: relative;
+        display: inline-block;
+        height: 140px;
+        background-color: rgba(233, 245, 251, 0.8);
+        overflow: hidden;
+      }
+    
+
+}

@@ -1,0 +1,68 @@
+<ion-header no-border>
+
+  <ion-navbar no-border>
+    <ion-searchbar color="light" #searchBar (ionFocus)="onSearchFocus()" no-border
+    mode="ios" (ionInput)="searchFoods()" [formControl]="searchQuery"></ion-searchbar>
+    <ion-buttons right>
+     <button ion-button color="mycolor" mode="ios" clear small (click)="close()">Close</button>
+   </ion-buttons>
+  </ion-navbar>
+ 
+
+</ion-header>
+
+
+<ion-content style="background:rgba(255, 255, 255, 0.97);">
+
+  <div style="overflow-y:auto; width:100%; height: 100%;">
+    <div text-center *ngIf="searching">
+      <ion-spinner name="circles"></ion-spinner>
+    </div>
+    <ion-list>
+        <button ion-item no-lines *ngFor="let result of results" (click)="goProfile(result)" style="padding:0; width:100%; ">
+            <div text-center [style.background-image]="'url(' + (result?.dp != null ? result?.dp : './assets/imgs/default-user.png') + ')'" style="background:rgba(255, 192, 203, 0); margin-left:3px; background: rgb(235, 235, 235);  border-radius:100%; background-size: cover;  display: inline-block; width:40px; height:40px;" item-start  >
+            </div>
+            <ion-grid item-end style="background: rgba(194, 196, 42, 0); padding:0;">
+              <ion-row nowrap style="background:rgba(255, 255, 255, 0);">
+                <ion-col col-12 style=" background:rgba(255, 255, 255, 0); padding:0;">
+                <div text-nowrap  style="width:auto; display: inline-block; ">
+                  <div  style="width:100%; float: left; text-transform: capitalize; font-size: 15px; color:rgb(71, 71, 71); background:rgba(11, 177, 11, 0); ">
+                    {{result?.fname}} {{result?.lname}}
+                  </div>
+                  <div  style="width:100%; float: left; font-size: 11px; color:rgb(119, 119, 119); background:rgba(11, 177, 11, 0); ">
+                      @{{result?.userHandle}}
+                  </div>
+                </div>
+                </ion-col>
+              </ion-row>       
+            </ion-grid>
+          </button>
+        </ion-list>
+        <ion-list>
+          <button ion-item *ngFor="let fil of filterData" (click)="gofoodpage(fil.key,fil.data?.title)">
+              <div text-center [style.background-image]="'url(' + (fil?.data?.photo != null ? fil?.data?.photo : './assets/imgs/default-user.png') + ')'" style="background:rgba(255, 192, 203, 0); margin-left:1px; background: rgb(235, 235, 235);  border-radius:5px; background-size: cover;  display: inline-block; width:50px; height:50px;" item-start  >
+              </div>
+              {{fil?.data?.title}}
+          </button>
+        </ion-list>
+
+        <div *ngIf="searched; else graph;">
+          <div text-center *ngIf="results?.length < 1 && filterData?.length < 1 && !searching">No results found...</div>
+        </div>
+        <ng-template #graph>
+          <div text-center>
+          <div class="faded" style="margin:0 auto; background-size:cover; width:200px; height:200px; background-image:url(./assets/imgs/vector-search.png);">   
+          </div>
+          <div class="faded" style="
+        font-size: 11px;
+        color: #aaaaaa;
+        font-weight: 900;
+        padding: 4px 20px;
+          ">Search people or should i say sellers, using there user-handles.<br/>
+          for eg. suhaib.khan1998
+        </div>
+      </div>
+        </ng-template>
+  </div>
+
+</ion-content>

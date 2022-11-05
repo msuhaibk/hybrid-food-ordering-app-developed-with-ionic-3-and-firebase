@@ -1,0 +1,81 @@
+<ion-header no-border>
+  <ion-navbar>
+        <ion-buttons left>
+            <button ion-button icon-only clear color="dark" (click)="close();"><ion-icon name="close"></ion-icon></button>
+          </ion-buttons>
+    <ion-title text-center class="my-toolbar">Notifications</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+    <div *ngIf="MyNotifications | async; else myload; let notifications;">
+        <ion-card mode="ios" class="faded" *ngFor="let notify of notifications.slice().reverse()">
+          <ion-card-header>
+            <ion-note>
+              {{ notify?.postedAt | date: 'h:mm a , d MMM y '}} • specific to you
+            </ion-note>
+            <br />
+            <br />
+            <span class="notif-title">{{notify?.title}}</span>
+    
+          </ion-card-header>
+    
+          <ion-card-content>
+           <span class="notif-content">{{notify?.message}}</span>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      <ng-template #myload>
+        <div text-center>
+          <div class="item">
+              <div class="loader" style="animation-delay: .33s"></div>
+          </div>
+        </div>
+      </ng-template>
+    
+
+  <div *ngIf="Notifications | async; else load; let notifications;">
+    <ion-card mode="ios" class="faded" *ngFor="let notify of notifications.slice().reverse()">
+      <ion-card-header>
+        <ion-note>
+          {{ notify?.postedAt | date: 'h:mm a , d MMM y '}}
+        </ion-note>
+        <br />
+        <br />
+        <span class="notif-title">{{notify?.title}}</span>
+
+      </ion-card-header>
+
+      <ion-card-content>
+        <span class="notif-content">{{notify?.message}}</span>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <ng-template #load>
+      <div text-center>
+          <div class="item">
+              <div class="loader" style="animation-delay: .33s"></div>
+          </div>
+          <div class="item">
+              <div class="loader" style="animation-delay: .33s"></div>
+          </div>
+        </div>
+  </ng-template>
+
+  <div text-center *ngIf="(Notifications | async)?.length == 0 && (MyNotifications | async)?.length == 0">
+    <div class="faded" style="margin:20px auto; background-size:cover; width:150px; height:150px; background-image:url(./assets/imgs/vector-message.png);">   
+    </div>
+    <div class="faded" style="
+  font-size: 11px;
+  color: #aaaaaa;
+  font-weight: 900;
+  padding: 4px 20px;
+">Here We Notify you of valued updates regarding offers, changes and many more.<br/>Stay Tuned.
+  </div>
+  </div>
+
+
+</ion-content>

@@ -1,0 +1,106 @@
+<ion-header no-border>
+
+  <ion-navbar no-border>
+    <ion-title></ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+    <ng-template #loadprofile>
+        <div text-center style="width:100%; background: rgb(255, 255, 255); height: 250px; padding: 10px;">
+        <div style="width:100px; height:100px; border-radius: 100%; display: inline-block; background:rgb(230, 230, 230);"></div>
+        </div>
+      </ng-template>
+
+      <div *ngIf="profile | async; else loadprofile; let profile;">
+    <div text-center style="background: rgb(255, 255, 255);
+  width: 100%;
+  height: min-content;
+  padding: 10px;
+  border-radius: 25px;
+  box-shadow: 0 3px 20px 3px #eceaea;">
+      <div style="background:rgb(236, 236, 236); box-shadow:inset 0 0 14px 4px rgba(255, 255, 255, 0.05); color:white; border-radius:100%; overflow: hidden;  display: inline-block; width:100px; height:100px;" >
+        <img [src]="(profile[0]?.dp != null) ? profile[0]?.dp : './assets/imgs/default-user.png' " />
+    
+      </div>
+        <h2 text-center>{{ profile[0]?.fname  + ' ' + profile[0]?.lname}}</h2>
+        <br/>
+        <button ion-button mode="ios" [disabled]="!(interests | async)?.length" color="secondary" small (click)="placeCall(profile[0].phoneNumber)">
+          <span>
+            <ion-icon name="call"></ion-icon> call
+          </span>
+        </button>
+
+        </div>
+
+        <br/>
+
+        <div style="margin-top: 15px;">
+          <div *ngIf="interests | async; let interests;"> 
+            <div *ngFor="let interest of interests;">
+              <!-- *ngIf="availability(interest.when)" -->
+    <div style="
+    background-color: #fbecec;
+    width:  100%;
+    height:  min-content;
+    border-radius: 8px;
+    margin-top: 5px;
+    position: relative;
+    padding: 14px;
+">
+<span style="
+position:  absolute;
+right: 2px;
+top: 2px;
+padding: 2px;
+">
+<span style="color: rgb(219, 112, 147); margin:6px;" *ngIf="interest.selected == mysellerId; else wait;"><ion-icon name="ribbon"></ion-icon> Selected</span>
+<ng-template #wait>
+  <span  style="color: grey; margin:5px;" *ngIf="interest.sellers && interest.sellers[mysellerId]; else req;"><ion-icon name="time"></ion-icon> wait</span>
+<ng-template #req>
+  <button ion-button outline mode="ios" small color="secondary" (click)="reqOrder(interest.key)">Request</button>
+</ng-template>
+</ng-template>
+</span>
+
+    <span style="
+    font-size: 10px;
+    color: #c7b0b0;
+    text-decoration:  underline;
+">
+        shared on {{interest.sharedOn | date: 'd MMM y,h:mm a'}}
+        </span>
+        <br/>
+        <span style="
+        font-size: 10px;
+        color: #c7b0b0;
+        text-decoration:  underline;
+    ">
+            Want on {{interest.when | date: 'd MMM y,h:mm a'}}
+            </span>
+        <div style="
+    font-size: 16px;
+    color: #c16f6f;
+    margin-top:  6px;
+    /* line-height: 30px; */
+    white-space:  normal;
+    word-wrap: normal;
+">
+           {{interest.title}}
+</div>
+    </div>
+  </div>
+</div>
+
+    <div *ngIf="!(interests | async)?.length">
+        <div text-center>I do not have any interests now.</div>
+    </div>
+
+</div>
+</div>
+
+
+</ion-content>

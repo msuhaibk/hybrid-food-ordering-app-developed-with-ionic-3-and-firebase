@@ -1,0 +1,71 @@
+<ion-header no-border>
+
+  <ion-navbar no-border>
+    <ion-title>{{interest.value?.title || 'my shared interest'}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content style="overflow: hidden; border-radius:24px;">
+    <ion-list text-center no-lines radio-group [(ngModel)]="selected" *ngIf="sellers && !loading;">
+        <div *ngFor="let seller of sellers;">
+        <ion-item mode="ios" class="block my-radio-item" *ngIf="seller.profile; else load; let pro;">
+          <ion-radio mode="ios" [value]="{key:seller.key,phone:pro[0].phoneNumber}"></ion-radio>
+          <ion-label>
+           <span class="faded" style="color: #5b5b5b; display: flex; justify-content: center; align-items: center;" >
+            <span text-center [style.background-image]="'url(' + (pro[0].dp != null ? pro[0].dp : './assets/imgs/default-user.png') + ')'" style="margin-left:3px; background-color: rgb(235, 235, 235);  border-radius:100%; background-size: cover;  display: inline-block; width:34px; height:34px;" item-start  >
+            </span>
+             {{ pro[0].name || 'seller-name' }} <span style="color:rgb(216, 18, 18);" *ngIf="preSelected == seller.key">::selected</span>
+          </span>
+          </ion-label>
+        </ion-item>
+        <ng-template #load>
+            <ion-item no-lines  mode="ios" class="block my-radio-item">
+                <ion-label>
+                    <span class="faded" style="color: #5b5b5b; display: flex; justify-content: center; align-items: center;" >
+                        <span style="background:#eef1f5; color:white; margin-left: 3px; border-radius:100%; background-size: cover;  display: inline-block; width:34px; height:34px;">
+                        </span>
+                   </span>
+                   </ion-label>
+              <div class="loader"></div>
+            </ion-item>
+          </ng-template>
+      </div>
+      <ion-item *ngIf="sellers?.length > 0" mode="ios" class="block my-radio-item">
+          <ion-radio mode="ios" value="none"></ion-radio>
+          <ion-label>
+           <span class="faded" style="color: #5b5b5b; display: flex; justify-content: center; align-items: center;" >
+            <span text-center style="margin-left:3px; background-color: rgb(255, 255, 255);  border-radius:100%; background-size: cover; background-image: url('./assets/imgs/vector-interest.png'); display: inline-block; width:34px; height:34px;" item-start  >
+            </span>
+             None of the above
+          </span>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+
+      <div *ngIf="loading">
+          <br/>
+          <br/>
+        <div text-center>
+<ion-spinner></ion-spinner>
+        </div>
+      </div>
+    
+    <div text-center *ngIf="!loading && sellers?.length < 1">
+      <br/><br/>
+<ion-note>Wait for sellers to respond.</ion-note>
+    </div>
+
+    </ion-content>
+    <ion-footer no-border no-shadow style="overflow: hidden; background: #fdf9f9; border-radius: 0 0 24px 24px;">
+      <ion-grid no-padding>
+        <ion-row no-padding>
+          <ion-col>
+              <button color="secondary" mode="ios" full block clear [disabled]="!selected && sellers?.length < 1" ion-button (click)="placeCall()">Call</button>
+          </ion-col>
+          <ion-col>
+        <button color="mycolor" mode="ios" full block clear [disabled]="!selected && sellers?.length < 1" ion-button (click)="confirm()">Select</button>            
+            </ion-col>
+        </ion-row>
+      </ion-grid>  
+      </ion-footer>

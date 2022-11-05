@@ -1,0 +1,94 @@
+page-location-select {
+ 
+  ion-list {
+    margin: 0 !important;
+  }
+ 
+  #please-connect {
+    position: absolute;
+    background-color: #fff;
+    opacity: 0.8;
+    display: none;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+ 
+  #please-connect p {
+      color: rgb(223, 223, 223);
+      font-weight: bold;
+      text-align: center;
+      position: relative;
+      font-size: 1.1em;
+      top: 60%;
+  }
+ 
+  .scroll-content {
+      overflow: hidden;
+  }
+ 
+  #map {
+      width: 100%;
+      height: 75%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgb(243, 243, 243);
+   
+  }
+
+  #address{
+      width:100%;
+      height: 20%;
+      height: calc(20% + 24px);
+    position: relative;
+    padding: 6px;
+    box-shadow: 0px -4px 20px 5px #ffffff;
+    background: #ffffff;
+    margin-top: -24px;
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      flex-direction: column;
+      transition: all 1s;
+     
+
+  }
+
+  .toolbar-title-md {
+    font-family: impact;
+    font-weight: lighter;
+    padding: 0 12px;
+    font-size: 2rem;
+    /* font-weight: 500; */
+    color: #424242;
+}
+  .myaddress{
+
+    font-size:  10px;
+    height: 100px;
+    height: calc(100%-20px);
+    width:  100%;
+    display:  flex;
+    justify-content:  center;
+    align-items:  center;
+    color: #8a8888;
+
+  }
+
+  .my-marker:after {
+    width: 22px;
+    height: 40px;
+    display: block;
+    content: ' ';
+    position: absolute;
+    top: 50%; left: 50%;
+    touch-action: none;
+    animation: bulge 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation-delay:0s;
+    margin: -40px 0 0 -11px;
+    background: url('https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi_hdpi.png');
+    background-size: 22px 40px; /* Since I used the HiDPI marker version this compensates for the 2x size */
+    pointer-events: none; /* This disables clicks on the marker. Not fully supported by all major browsers, though */
+}
+
+}

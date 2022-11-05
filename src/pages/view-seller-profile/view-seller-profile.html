@@ -1,0 +1,122 @@
+<ion-header no-border>
+
+  <ion-navbar>
+    <ion-title class="my-toolbar">Seller Profile</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content style="background:#ffffff;">
+
+    <ng-template #loadprofile>
+        <div text-center style="width:100%; background: rgb(255, 255, 255); height: 250px; padding: 10px;">
+        <div style="width:100px; height:100px; border-radius: 100%; display: inline-block; background:rgb(230, 230, 230);"></div>
+        </div>
+      </ng-template>
+
+  <div class="faded"  *ngIf="profile | async; else loadprofile; let profile;" text-center>
+ 
+ <div class="faded" style="background: rgb(255, 255, 255);
+    width: 90%;
+    height: min-content;
+    margin: 10px auto;
+    padding: 10px;
+    position: relative;
+    border-radius: 20px;
+    box-shadow: 0 3px 20px 2px #f1efef;">
+    <div style="position:absolute;top: 17px; right: 17px;">
+      <div *ngIf="(rating | async); let rating;">
+      <button ion-button small item-end mode="ios" color="mydgreen"  >
+        <span><ion-icon name="star"></ion-icon> {{roundOff((rating?.val/rating?.no))}}</span>
+       </button><br/>
+       <span style="font-size: 9px; color:rgb(175, 174, 174);">By {{rating?.no}} users</span>
+      </div>
+  </div>
+      <div style="background:rgb(236, 236, 236); box-shadow:inset 0 0 14px 4px rgba(255, 255, 255, 0.05); color:white; border-radius:100%; overflow: hidden;  display: inline-block; width:100px; height:100px;" >
+        <img [src]="(profile[0]?.dp != null) ? profile[0]?.dp : './assets/imgs/default-user.png' " />
+    
+      </div>
+      <br/>
+      <i style="font-size: 11px; color: #949494;">{{'@' + profile[0]?.userHandle}}</i>
+        <h2 style="font-size: 20px; margin-top: 3px; text-transform: capitalize; color: #575757;" text-center>{{ profile[0]?.fname  + ' ' + profile[0]?.lname}} <ion-icon color="myblue" *ngIf="profile[0]?.isVerified" name="ios-checkmark-circle"></ion-icon></h2>
+        <div style="color: grey; font-size: 11px;">{{profile[0]?.description || 'I am a Qziine user and you are welcome here'}} </div>
+        <div style="margin-top:8px;">
+            <button *ngIf="isfollowing | async;" small ion-button clear mode="ios" (click)="unfollow(seller)">Unfollow</button>
+            <button *ngIf="!(isfollowing | async);" small ion-button clear mode="ios" (click)="follow(seller)">Follow</button>
+        </div>
+
+      </div>
+
+      <br/>
+
+    
+
+      <div *ngIf="Posts | async; let posts;">
+        <div text-center="" style="
+    color: #d97c90;
+    border-top: 1px dashed #d1d9d1;
+    padding:10px 3px;
+">Posts by the Seller</div>
+
+    <div *ngFor="let post of posts?.slice().reverse()" style="background: rgba(172, 255, 47, 0); margin-top:3px;">
+        <button class="faded" *ngIf="post.data | async; else load; let data;" (click)="gofoodpage(post.key,data.name)" ion-item no-lines style="background: rgb(253, 253, 253); border-radius:5px;  padding:0; width:100%; height: 80px; margin:auto;  ">
+          <div text-center [ngStyle]="{'background-image': 'url(' + data.photo + ')'}" style="background-color:rgba(255, 192, 203, 0.185); margin-left: 3px; border-radius:2px;  color:white; background-size: cover; display: inline-block; width:60px; height:60px;" item-start  >
+          </div>
+              <ion-grid item-end style="background: rgba(194, 196, 42, 0); padding:0;">
+                <ion-row nowrap style="background:rgba(255, 255, 255, 0);">
+                  <ion-col col-12 style=" background:rgba(255, 255, 255, 0); padding:0;">
+                    <div text-nowrap  style="width:100%; display: inline-block; font-weight: bold; ">
+                    <div style="width:100%; text-overflow:ellipsis; overflow: hidden; float: left; color:rgb(71, 71, 71);  background:rgba(11, 177, 11, 0); ">
+                    
+                      <div class="food-type-icon" [style.border-color]="data.type=='veg' ? 'green' : data.type=='nonveg' ? '#da1d2d' : 'orange'">
+                      <span [style.background-color]="data.type=='veg' ? 'green' : data.type=='nonveg' ? '#da1d2d' : 'orange'"></span>
+                      </div>
+                    
+                      {{data.name}}
+                    </div>
+                  </div>
+                </ion-col>
+              </ion-row>
+                <ion-row style="background:rgba(75, 188, 196, 0); padding:0;">
+                  <ion-col> 
+                    <div style="background: rgba(196, 42, 42, 0); color:rgb(131, 131, 131);">
+                       <span *ngIf="availability(data.availability,data.availableTill); else unavail;"><span style="color:rgb(30, 173, 30);">Available</span> at <span class="rupee" style="color:rgba(223, 43, 97, 0.986);"> {{netPrice(data.price)}}</span></span>
+                       <ng-template #unavail><span><span  style="color:rgb(204, 5, 15);">Unavailable</span></span></ng-template>
+                        </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+            </button>
+            <ng-template #load> 
+              <ion-item no-lines style="width:100%; height:80px; padding:0; background: #f5f8fc; position: relative;">
+                  <div item-start style="background:#eef1f5; color:white; margin-left: 3px; border-radius:2px; background-size: cover;  display: inline-block; width:60px; height:60px;"></div>
+             <ion-grid no-padding item-end>
+               <ion-row>
+                 <div style="height:4px; width:100%;"></div>
+               </ion-row>
+              </ion-grid>
+              <div class="loader"></div>
+                </ion-item>
+            </ng-template>
+          </div>
+        </div>
+
+       
+            <div text-center *ngIf="!((Posts | async)?.length > 0)"> 
+                <div class="faded" style="margin:20px auto; background-size:cover; width:110px; height:110px; background-image:url(./assets/imgs/vector-menu.png);">   
+                </div>
+                <div class="faded" style="
+              font-size: 11px;
+              color: #aaaaaa;
+              font-weight: 900;
+              padding: 4px 20px;
+            ">Active Foods that are posted by the seller.You can choose among them and order anything. 
+              </div>   
+            </div>
+       
+
+</div>
+
+
+</ion-content>

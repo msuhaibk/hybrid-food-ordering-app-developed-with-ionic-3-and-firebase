@@ -1,0 +1,41 @@
+page-signup {
+
+    ion-label[fixed] {
+         -webkit-box-flex: unset; 
+         -webkit-flex:0;
+         -ms-flex: unset;
+         flex: unset; 
+         width: unset;
+         min-width: unset;
+         max-width: unset; 
+        color: #8f1535;
+    }
+
+    .otp .text-input{
+        color:#83263f;
+        letter-spacing: 15px;
+        font-size:22px;
+    }
+
+.logo{
+    margin-top: 20px;
+}
+    .logo img{
+    width:150px;
+}
+
+
+    h4{
+        color:#a30f30;
+    }
+
+    .otp .text-input-ios {
+    margin: unset;
+    width:165px;
+    }
+
+    .otp ion-input{
+        text-align: center;
+    }
+
+}

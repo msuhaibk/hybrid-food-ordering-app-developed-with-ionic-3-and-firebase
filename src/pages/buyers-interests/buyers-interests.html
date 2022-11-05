@@ -1,0 +1,168 @@
+<ion-content style="background:rgba(244, 244, 244, 0.4); ">
+
+  <div style="position:relative;">
+    <ion-slides class="swiper-no-swiping" #intrstSlider style="position:sticky; top:0; padding: 0; margin: 0; background: #fbf6f7; z-index: 10;">
+      <ion-slide>
+        <ion-item style="background:#fbf6f7; position:sticky; top:0; z-index: 10; " padding-vertical no-lines
+          mode="ios">
+          <ion-input [disabled]="disabled" type="text" [(ngModel)]="interest" maxlength="80"
+            placeholder="What's in your Interests ? "></ion-input>
+          <button item-end ion-button color="mycolor" (click)="nextSlide(interest)" clear>
+           Next
+          </button>
+        </ion-item>
+      </ion-slide>
+      <ion-slide>
+            <ion-grid style="background:rgba(251, 246, 247, 0.808); padding:0;">
+              <ion-row nowrap>
+                <ion-col>
+            <button class="edit-intr" ion-button mode="ios" color="mycolor" small (click)="prevSlide()" clear>
+                Edit<br/>
+                <span class="intr-content">{{interest}}</span>
+              </button>  
+            </ion-col>
+            <ion-col>
+                <form [formGroup]="form" role="form">
+                <ion-item no-lines class="itemki" style="width: min-content;">
+                <ion-label color="primary" required stacked>Date of order ?</ion-label>
+                <ion-datetime [disabled]="disabled" formControlName="datetime" displayFormat="D MMM , h:mm a"  pickerFormat="D MMM h mm a"></ion-datetime>
+              </ion-item>
+              </form>
+            </ion-col>
+            <ion-col style="justify-content: center; align-items: center; display: flex;">
+            <button small ion-button [disabled]="disabled" color="mycolor" (click)="shareInterest(interest)" clear>
+              <ion-icon name="add"></ion-icon> Share
+            </button>
+          </ion-col>
+          </ion-row>
+        </ion-grid>
+        </ion-slide>
+    </ion-slides>
+    <div style="width:100%; max-height:200px; background: rgba(255, 255, 255, 0.514); overflow-y:auto;">
+      <ion-item class="faded" no-lines *ngFor="let interest of (sharedinterests | async)?.slice().reverse()"
+        style="width:100%; height:50px; margin-top:2px; color:#c26c6c; background:rgb(255, 243, 243);">
+     <span style="font-size: 11px; display: flex; white-space: nowrap; flex-direction: column;">
+      <span style="font-size: 6px; color: #c1c1c1;">
+        {{interest.value?.sharedOn  | date: 'd MMM y,h:mm a'}} >> {{interest.value?.when  | date: 'd MMM y,h:mm a'}}
+      </span>  
+      <span style="margin-top: 2px; text-overflow: ellipsis; white-space: nowrap; width:  100%; overflow:  hidden;">
+     {{interest.value?.title}}
+     </span>
+    </span>
+     <button *ngIf="!interest.value?.sellers; let obj;" item-end ion-button color="mycolor" (click)="viewInterestShared(interest)" icon-only clear>
+       <ion-icon name="time"></ion-icon>
+    </button>   
+     <button *ngIf="interest.value?.sellers; let obj;" mode="ios" item-end ion-button color="mycolor" (click)="viewInterestShared(interest)" icon-only clear>
+    <span style="display:inline-flex;" *ngIf="!interest.value?.selected"><span class="my-badge">{{ getLength(obj) }}</span><ion-icon name="people"></ion-icon></span>
+    <span *ngIf="interest.value?.selected"><ion-icon name="person"></ion-icon></span>
+    </button>   
+     <button item-end ion-button color="mycolor" (click)="deleteInterestShared(interest.key)" icon-only clear>
+        <ion-icon name="close-circle"></ion-icon>
+        </button>
+      </ion-item>
+      <div text-center *ngIf="!(sharedinterests | async)?.length"
+        style="width:100%; background: rgba(255, 255, 255, 0); height:180px;">
+      <div class="faded" style="margin:0 auto; background-size:cover; width:120px; height:120px; background-image:url(./assets/imgs/vector-interest.png);">   
+      </div>
+      <div class="faded" style="
+    font-size: 11px;
+    color: #aaaaaa;
+    font-weight: 900;
+    padding: 4px 20px;
+">Tell your followed sellers how much you love them by telling them about your upcoming food interests.
+    </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="disabled && loading" class="loader-bar"></div>
+  <div>
+    <div text-center
+      style="background:rgba(250, 250, 250, 0.959); width: 100%; color: rgb(209, 209, 209); font-size:12px; font-weight: 900; padding:5px; position:sticky; top:-1px; z-index: 100; ">
+      Below are the Interests you show
+    </div>
+
+    <div *ngFor="let interest of myinterests | async" style="background: rgba(172, 255, 47, 0);">
+     <ion-grid no-padding>
+       <ion-row>
+         <ion-col col-10> 
+      <button class="faded" *ngIf="interest.posts | async; else load; let int;"
+        (click)="gofoodpage(interest.key,int.name)" ion-item no-lines
+        style="background: rgb(253, 253, 253); border-radius:5px;  padding:0; width:100%; height: 80px; margin:auto;  ">
+        <div text-center [ngStyle]="{'background-image': 'url(' + int.photo + ')'}"
+          style="background-color:rgba(255, 192, 203, 0.185); margin-left: 3px; border-radius:2px;  color:white; background-size: cover; display: inline-block; width:54px; height:54px;"
+          item-start>
+        </div>
+        <ion-grid item-end style="background: rgba(194, 196, 42, 0); padding:0;">
+          <ion-row nowrap style="background:rgba(255, 255, 255, 0);">
+            <ion-col col-12 style=" background:rgba(255, 255, 255, 0); padding:0;">
+              <div text-nowrap style="width:100%; display: inline-block; font-weight: bold; ">
+                <div
+                  style="width:100%; text-overflow:ellipsis; overflow: hidden; float: left; color:rgb(71, 71, 71);  background:rgba(11, 177, 11, 0); ">
+
+                  <div class="food-type-icon"
+                    [style.border-color]="int.type=='veg' ? 'green' : int.type=='nonveg' ? '#da1d2d' : 'orange'">
+                    <span
+                      [style.background-color]="int.type=='veg' ? 'green' : int.type=='nonveg' ? '#da1d2d' : 'orange'"></span>
+                  </div>
+
+                  {{int.name}}
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row style="background:rgba(75, 188, 196, 0); padding:0;">
+            <ion-col>
+              <div style="background: rgba(196, 42, 42, 0); color:rgb(131, 131, 131);">
+                <span *ngIf="availability(int.availability,int.availableTill); else unavail;"><span style="color:rgb(30, 173, 30);">Available</span> at <span
+                    class="rupee" style="color:rgba(223, 43, 97, 0.986);"> {{netPrice(int.price)}}</span></span>
+                <ng-template #unavail><span><span  style="color:rgb(204, 5, 15);">Unavailable</span></span></ng-template>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </button>
+      <ng-template #load>
+        <ion-item no-lines style="width:100%; height:80px; padding:0; background: #f5f8fc; position: relative;">
+          <div item-start
+            style="background:#eef1f5; color:white; margin-left: 3px; border-radius:2px; background-size: cover;  display: inline-block; width:60px; height:60px;">
+          </div>
+          <ion-grid no-padding item-end>
+            <ion-row>
+              <div style="height:4px; width:100%;"></div>
+            </ion-row>
+          </ion-grid>
+          <div class="loader"></div>
+        </ion-item>
+      </ng-template>
+    </ion-col>
+    <ion-col col-2 style="background: #ffff;">
+        <button (click)="deleteInterestShown(interest.key)" ion-button large clear item-end>
+            <ion-icon color="danger" name="trash"></ion-icon>
+          </button>
+     </ion-col>
+  </ion-row>
+</ion-grid>
+    </div>
+
+    <div text-center *ngIf="!(myinterests | async)?.length"
+      style="width:100%;">
+      <br/>
+      <div class="faded" style="margin:0 auto; background-size:cover; width:110px; height:110px; background-image:url(./assets/imgs/vector-showinterest.png);">   
+      </div>
+      <div class="faded" style="
+    font-size: 11px;
+    color: #aaaaaa;
+    font-weight: 900;
+    padding: 4px 20px;
+  ">Here are few of your interested food posts who have taken your heart.
+    </div>
+    </div>
+
+
+
+  </div>
+  <br /><br />
+  <br /><br />
+
+
+</ion-content>

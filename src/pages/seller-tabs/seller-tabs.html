@@ -1,0 +1,21 @@
+<ion-header  no-border>
+
+  <ion-navbar no-border color="light">
+    <ion-title><span class="mytitle">Qziine's Seller</span></ion-title>
+
+    <ion-buttons end>
+      <button ion-button color="mycolor" menuToggle clear icon-only> 
+        <div [style.background-image]="'url(' + (avatar != null ? avatar : './assets/imgs/default-user.png') + ')'" class="myavatar" item-start>
+        </div>
+      </button>
+    </ion-buttons>
+
+  </ion-navbar>
+</ion-header>
+
+<super-tabs no-border tabsPlacement="bottom" toolbarColor="mycolor" toolbarBackground="light" indicatorColor="mycolor">
+  <super-tab [root]="root1" title="Orders" id="oneTab"></super-tab>
+  <super-tab [root]="root2" title="Posts"  id="twoTab"></super-tab>
+</super-tabs>
+
+ 

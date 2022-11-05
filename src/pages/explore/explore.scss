@@ -1,0 +1,230 @@
+page-explore {
+
+  ion-content{
+    background:rgb(231, 231, 231);
+  }
+   
+  .mytitle {
+    position: absolute;
+    top: 2%;
+    left:2%;
+    font-size: 1.2em;
+    text-align: start;
+    width: 65%;
+    font-weight: 500;
+    opacity: 0.92;
+    color: #fff;
+    text-shadow: 4px 1px 16px black;
+    transition: all 0.4s;
+  } 
+
+
+  .grido{
+    background: rgb(248, 248, 248); opacity: 1;  border-radius:14px; box-shadow: 0 0.5px 8px 2px rgba(10, 10, 10, 0.205); overflow: hidden;
+  transition: all 0.2s;
+  }
+
+  .grido-active{
+    transform: scale(0.98,0.98);
+    opacity: 0.98;
+    box-shadow:0 0 1px 1px rgba(10, 10, 10, 0.2);
+    transition: all 0.5s;
+  }
+
+  .grido-active .image-container{
+    background-size: 110%;
+  }
+
+  .grido-active .mytitle{
+    opacity: 0;
+  }
+  
+  .grido-active .heart{
+    opacity: 0;
+    transition: all 1s;
+  }
+  
+  .grido-active .distance{
+    opacity: 0;
+  }
+  
+  .grido-active .plates-left{
+  opacity: 0;
+  }
+
+  .my-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+.location-bar{
+  max-width: 80%;
+  text-overflow: ellipsis;
+}
+
+.location-bar .button-inner{
+display: inline;
+}
+
+  .bar{
+    width:100%; height:3px; background:rgb(230, 5, 54); margin-top:10px;
+    transform: translateX(-48px);
+    animation-name: load;
+    animation-duration: 0.6s;
+    animation-delay: 0.4s;
+    animation-timing-function:ease-in-out;
+    // cubic-bezier(0.2, 1, 1.3, 0.9);
+    animation-iteration-count: infinite;
+    animation-direction:alternate;
+    animation-fill-mode: forwards;
+
+  }
+
+
+  .fadeIn {
+    opacity: 0;
+
+    animation-name: fadeIn;
+    animation-duration: 0.8s;
+    animation-delay: 0.1s;
+    transition: opacity 1.1s ease,visibility 1s ease;
+    animation-timing-function:cubic-bezier(0.2, 1, 1.3, 0.9);
+    // animation-iteration-count: infinite;
+    animation-direction:normal;
+    animation-fill-mode: forwards;
+
+  }
+
+  @keyframes load{
+    from{ transform: translateX(-48px); }
+    to{ transform: translateX(0px);  }
+    
+    }
+
+
+@keyframes opts{
+from{ margin-top:-100px; }
+to{ margin-top:0px;  }
+
+}
+
+@keyframes fadeIn{
+  0%{ opacity:0; transform: translate3d(0,40px,0); }
+  70%{ opacity: 1; transform: translate3d(0,0px,0);}
+  to{ opacity: 1; transform: translate3d(0,0px,0);}
+  
+  }
+
+  
+@keyframes glare{
+  from{ left:0; }
+  to{ left:100%;}
+  
+  }
+
+  ion-icon{
+    position: relative;
+    z-index: 1;
+  }
+
+  .glare{
+
+    position: absolute;
+    top:0;
+    left:0;
+    background:rgba(255, 255, 255, 0.945);
+    height:100%;
+    width:40px;
+    box-shadow:0 0 50px 30px rgb(255, 255, 255); 
+    animation-name: glare;
+    animation-duration: 0.9s;
+    animation-delay: 0.05s;
+    animation-timing-function:ease-out;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    // animation-fill-mode: forwards;
+  
+
+  }
+
+ .searchu {
+  opacity: 0;
+  animation-name: fadeIn;
+    animation-duration: 0.3s;
+    animation-delay: 0.1s;
+    animation-timing-function:cubic-bezier(0.2, 1, 1.3, 0.9);
+    // animation-iteration-count: infinite;
+    animation-direction:normal;
+    animation-fill-mode: forwards;
+    
+ }
+
+ .grid[no-padding] > .row > .col {
+
+  height: 195px;
+
+ }
+
+  .heart{
+
+    position: absolute;
+    z-index:100000;
+    border-radius: 100%;
+    text-align: center;
+    right: -6px;
+    top:-3px;
+    transition: all 0.2s;
+  }
+
+  .subtitle {
+    font-size: 1.0em;
+    position: absolute;
+    top: 52%;
+    width: 100%;
+    color: #fff;
+  }
+
+  .distance{
+     font-size: 12px;
+     position: absolute;
+    bottom:2px;
+    right:3px;
+    color: #fff;
+    transition: all 0.4s;
+  }
+
+  .plates-left{
+    font-size: 12px;
+    position: absolute;
+   bottom:2px;
+   left:4px;
+   color: #fff;
+   transition: all 0.4s;
+  }
+
+  .image-container{
+    position: relative;
+    text-align: center;
+      background-size:100%;
+      background-position: center;
+      background-origin: border-box;
+      min-height:150px;
+      background-color: rgb(250, 214, 12); 
+      box-shadow:inset -10px -2px 40px 1px rgba(10, 10, 10, 0.5);
+      color:rgb(255, 255, 255);  
+      transition: all 0.25s;
+    }
+
+ 
+  .item {
+    position: relative;
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(235, 244, 248, 0.8);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  
+
+}

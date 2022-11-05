@@ -1,0 +1,62 @@
+page-shared-interest {
+
+
+    .block ion-icon{
+        font-size: 1.4rem !important;
+    }
+
+    .toolbar-background-md {
+        border-color: #ffffff;
+        background: #fdf9f9;
+        border-radius: 24px 24px 0 0;
+}
+    
+.toolbar-title-md {
+    color: #cab2ba;
+    font-size: 1.5rem;
+    font-weight: 900;
+}
+
+    .input-wrapper{
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: unset;
+        font-size: 1.4rem;
+        padding: 5px;
+    }
+
+    .item-md{
+        padding-left: unset;
+    }
+
+    .address-content{
+        color: #7b7878;
+        width: 100%;
+        overflow: hidden;
+        // text-overflow: ellipsis;
+        flex-wrap: wrap;
+        overflow-wrap: normal;
+        font-size: 1.2rem;
+        // height: 58px;
+        font-weight: lighter;
+        // white-space: pre-wrap;
+    }
+
+    .label-md {
+        margin: 0;
+        text-transform: capitalize;
+        display: flex;
+        align-items: center;
+    }
+
+.my-radio-item{
+    min-height: 50px;
+    height: auto;
+    margin-top: 1px;
+    width: 100%;
+    transition: all 0.5s;
+    border-top: 1px solid #eaeaea;
+    overflow: hidden;
+}
+
+}

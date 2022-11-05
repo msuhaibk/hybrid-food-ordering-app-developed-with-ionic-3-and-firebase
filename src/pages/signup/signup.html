@@ -1,0 +1,61 @@
+<ion-content>
+          
+  
+  
+  <div style="height:100%; width:100%; background-color: rgb(255, 255, 255); background-image: url('./assets/imgs/vector-background.png'); background-size: 250px; position: absolute;">
+
+     <div text-center class="logo" >
+       <img src="./assets/imgs/q-logo.png" />
+     </div> 
+     <br/>
+     <br/>
+        
+        <form [formGroup]="signUpForm" ng-reflect-form="false" novalidate>
+        <ion-slides class="swiper-no-swiping" #signupFormSlider>
+          
+          <ion-slide padding>
+
+    <h4>Please enter your Phone number</h4>
+
+    
+    
+            <ion-list style="position: relative; margin-top:2%; margin-bottom:10px; ">
+                <ion-item color="transparent" mode="ios">
+                <ion-label mode="ios" fixed>IN +91</ion-label>
+                <ion-input mode="ios" type="tel" required clearInput placeholder="your mobile number" formControlName="phoneNumber" ></ion-input>
+              </ion-item>
+              <br/>
+              <button ion-button mode="ios" type="button" round [disabled]="phoneNumber.invalid || !verifyDisabled" color="mycolor" block id="sign-in-button" (click)='signIn()'>CONTINUE</button>
+              
+            </ion-list>
+            </ion-slide>
+    
+          <ion-slide padding>
+    <h4>Enter 6-digit verification code</h4>
+
+              <ion-list no-lines style="position: relative; margin-top:2%; margin-bottom:10px; ">
+                  <ion-item class="otp" color="transparent" mode="ios">
+                  <ion-input  mode="ios" type="number" clearOnEdit min="6" max="6" step="1" placeholder="123456" required formControlName="verificationCode" ></ion-input>
+                </ion-item>
+                <br/>
+                <button [disabled]="phoneNumber.invalid || verificationCode.invalid || verifyDisabled" ion-button mode="ios" round color="mycolor" block id="sign-in-button" type="button" (click)="verifyCode2()">VERIFY</button> 
+              </ion-list>
+    
+          </ion-slide>
+       
+       
+        </ion-slides>
+      </form> 
+<br/><br/><div text-center style="color:darkred;" *ngIf="!verifyDisabled">
+              verification code sent to <span style="text-decoration:underline; color:rgb(187, 8, 62);">{{phnNumber}}</span><br/>
+       <br/>
+              <button ion-button [disabled]="(timer | async) > 0" color="mycolor" mode="ios" small round (click)="signIn()"><span *ngIf="timer | async; let timer;">{{timer}}</span> Resend</button>
+               </div>
+      <br/><br/>
+  </div>
+
+
+  </ion-content>
+  <ion-footer no-shadow>
+  </ion-footer>
+  

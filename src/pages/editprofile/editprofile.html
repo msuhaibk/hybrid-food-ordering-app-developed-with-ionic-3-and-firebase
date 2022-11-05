@@ -1,0 +1,108 @@
+<ion-header no-border>
+
+  <ion-navbar>
+    <ion-buttons left>
+      <button ion-button icon-only clear color="dark" (click)="closemodal();">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title text-center class="my-toolbar">My Profile</ion-title>
+    <ion-buttons right>
+      <button [disabled]="!(profileForm.touched && profileForm.dirty && profileForm.valid || base64Image != null )"
+        ion-button icon-only color="mycolor" (click)="saveprofile();">Save</button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <br />
+  <div>
+
+    <ion-item>
+      <div *ngIf="base64Image != null; else mydp;" (click)="updateDP();"
+        [style.background-image]="'url(' + base64Image + ')'"
+        style="width:150px; height:150px; margin:auto; background-color: rgb(245, 231, 228); background-size:cover; border-radius:100%;">
+      </div>
+      <ng-template #mydp>
+        <div (click)="updateDP();"
+          [style.background-image]="'url(' + (profiled?.dp != null ? profiled?.dp : './assets/imgs/default-user.png' ) + ')'"
+          style="width:150px; height:150px; margin:auto;  background-color: rgb(245, 231, 228); background-size:cover; border-radius:100%;">
+        </div>
+      </ng-template>
+
+    </ion-item>
+
+    <form [formGroup]="profileForm" novalidate role="form">
+
+      <ion-item class="itemki">
+        <ion-label color="primary" required stacked>First Name <ion-icon name="create"></ion-icon></ion-label>
+        <ion-input formControlName="fname"
+          [class.invalid]="!profileForm.controls.fname.valid && profileForm.controls.fname.dirty" type="text"
+          placeholder="your first name"></ion-input>
+      </ion-item>
+      <div class="validation-errors"
+        *ngIf="!profileForm.get('fname').valid && profileForm.get('fname').dirty && profileForm.get('fname').touched">
+        <span class="error-message">
+          First Name can contain only letters and spaces.
+        </span>
+      </div>
+
+      <ion-item class="itemki">
+        <ion-label color="primary" required stacked>Last Name <ion-icon name="create"></ion-icon></ion-label>
+        <ion-input formControlName="lname"
+          [class.invalid]="!profileForm.controls.lname.valid && profileForm.controls.lname.dirty" type="text"
+          placeholder="your last name"></ion-input>
+      </ion-item>
+      <div class="validation-errors"
+        *ngIf="!profileForm.get('lname').valid && profileForm.get('lname').dirty && profileForm.get('lname').touched">
+        <span class="error-message">
+          Last Name can contain only letters and spaces.
+        </span>
+      </div>
+
+      <ion-item *ngIf="profileForm.contains('handle')" class="itemki">
+        <ion-label color="primary" required stacked>Handle <ion-icon name="create"></ion-icon></ion-label>
+        <ion-input formControlName="handle"
+          [class.invalid]="!profileForm.controls.handle.valid && profileForm.controls.handle.dirty" type="text"
+          placeholder="your user handle"></ion-input>
+      </ion-item>
+      <div *ngIf="profileForm.contains('handle')">
+      <div class="validation-errors"
+        *ngIf="!profileForm.get('handle').valid && profileForm.get('handle').dirty && profileForm.get('handle').touched">
+        <span class="error-message">
+         Handle can only start with a letter and can contain only alpha-numerics and (.)
+        </span>
+      </div>
+      <div class="validation-errors"
+        *ngIf="!(profileForm.get('handle').touched && profileForm.get('handle').dirty)">
+        <span class="error-message">
+         Add your handle for example suhaib.khan123 so that your profile could be searched with that.<br/>
+         Note: what you save now will be fixed for you.
+        </span>
+      </div>
+    </div>
+
+    </form>
+    <br />
+
+    <ion-item *ngIf="profiled?.userHandle" class="itemki" style="min-height: 20px;">
+      <ion-label color="primary" required stacked>User Handle | <span
+          style="color:rgb(172, 172, 172); font-size:11px;">@{{profiled?.userHandle}}</span></ion-label>
+    </ion-item>
+    <ion-item class="itemki" style="min-height: 20px;">
+      <ion-label color="primary" required stacked>Phone | <span
+          style="color:rgb(172, 172, 172); font-size:12px;">{{profiled?.phoneNumber || 'your phone number'}}</span>
+      </ion-label>
+    </ion-item>
+    <ion-item class="itemki" style="min-height: 20px;">
+      <ion-label color="primary" required stacked>Account Created | <span
+          style="color:rgb(172, 172, 172); font-size:10px;">{{profiled?.joined | date: 'MMM d, y, h:mm a'}}</span>
+      </ion-label>
+    </ion-item>
+    <br />
+
+      </div>
+           
+</ion-content>

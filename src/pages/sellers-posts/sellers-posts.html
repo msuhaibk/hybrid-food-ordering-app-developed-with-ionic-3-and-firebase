@@ -1,0 +1,185 @@
+<ion-header no-border>
+
+  <ion-navbar no-border>
+    <ion-title>SellersPosts</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content style="background-color:rgb(250, 250, 250);">
+
+  <div class="menu-bar">
+     active posts
+   </div>
+  
+
+
+  <ng-template #loadprofile>
+    <div text-center style="width:100%; margin-top:52px; background: rgb(250, 250, 250); height: 250px; padding: 10px;">
+      <div
+        style="width:100px; height:100px; border-radius: 100%; display: inline-block; background:rgb(230, 230, 230);">
+      </div>
+      <p>Loading Your Profile...</p>
+    </div>
+  </ng-template>
+
+
+  <div style="margin-top: 52px;" *ngIf="profile | async; else loadprofile; let profile;">
+    <ion-grid style="background: rgba(221, 61, 88, 0);margin:0;">
+      <ion-row style="width:100%;overflow:  hidden;" nowrap>
+        <ion-col col-auto>
+          <div
+            [style.background-image]="'url(' + (profile?.dp != null ? profile?.dp : './assets/imgs/default-user.png') + ')'"
+            style="background-size:cover;width:100px;height: 100px; border-radius: 3px; background-color: #ffefef;">
+          </div>
+        </ion-col>
+        <ion-col style="overflow:  hidden;">
+          <div style="font-size:15px;color: rgb(110, 110, 110);width: 100%; font-weight:900; overflow:  hidden; text-transform: capitalize; text-overflow: ellipsis; white-space: nowrap;">
+            {{profile?.fname  + ' ' + profile?.lname}} <ion-icon color="myblue" *ngIf="profile?.isVerified" name="ios-checkmark-circle"></ion-icon>
+          </div>
+          <div style="font-size:10px; color: rgb(158, 158, 158);width: 100%; white-space: nowrap;">@{{profile?.userHandle || 'your.handle'}}</div>
+
+          <button ion-item mode="ios" color="transwhite" clear  detail-none (click)="goUpdateLocation()"      
+          style="font-size: 11px;
+       color: rgb(168, 167, 167);
+       width: 100%;
+       max-height: 55px;
+       padding: 2px;
+       overflow: hidden;
+       white-space: pre-wrap;
+       background: rgba(180, 227, 216, 0.09);
+       margin-top:2px;
+   ">  
+     <span *ngIf="profile?.usingLocation; else noloc; let loc;" style="white-space: normal; max-height: 69px; display: inline-block; overflow: hidden;"><ion-icon name="pin"></ion-icon> {{loc?.subAddress}} {{loc?.address}}</span>  
+    <ng-template #noloc><span><ion-icon name="add"></ion-icon> Add a new location</span></ng-template>     
+    </button>
+        </ion-col>
+      </ion-row>
+      <ion-row text-center>
+        <ion-col col-4>
+          <div style="display: flex; flex-direction:column; ">
+          <span style="font-size:  11px; color: #757474;">Total Posts : {{myStats.total_posts | async}}</span>
+          <span style="font-size:  11px; margin-top:2px; color: #757474;">Total Orders : {{myStats.total_orders | async}}</span>
+        </div>
+        </ion-col>
+        <ion-col col-4>
+            <div class="rate" *ngIf="(rating | async); let rating;">
+                <button ion-button small item-end mode="ios" color="mydgreen"  >
+                  <span><ion-icon name="star"></ion-icon> {{roundOff((rating?.val/rating?.no))}}</span>
+                 </button>
+                 <span style="font-size: 9px; display: block; color:rgb(175, 174, 174);">By {{rating?.no}} users</span>
+                </div>
+        </ion-col>
+        <ion-col col-4>
+          <button ion-button mode="ios" clear small color="mycolor" style="font-size:  11px;" (click)="goFollowersPage()">{{myStats.total_followers | async}} Followers</button>
+        </ion-col>
+
+      </ion-row>
+
+      <ion-row style="
+      font-size: 14px;
+      color: #5a5959;
+      font-weight:  bold;
+  ">
+        <ion-col>
+            <button ion-item color="transwhite" detail-none  (click)="updateDescription(profile.description)"      
+            style="font-size: 11px;
+         color: rgb(168, 167, 167);
+         width: 100%;
+         max-height: 55px;
+         padding: 5px;
+         overflow: hidden;
+         white-space: pre-wrap;
+         background: rgba(255, 255, 255, 0.089);
+     ">
+              <b>Description</b> | <span *ngIf="profile?.description; else nodesc; let description;">{{description}}</span>
+              <ng-template #nodesc><span>write a little description about yourself...</span></ng-template>
+                </button>
+        </ion-col>
+      </ion-row>
+
+    </ion-grid>
+  </div>
+
+  <div style=" text-align: center;
+  background: #fffefe;
+  color: #bdbaba;
+  font-size: 15px;
+  font-family: monospace;
+  padding: 3px;">
+   Last 10 Posts of you
+  </div>
+
+
+  <div *ngFor="let post of (Posts | async)?.slice().reverse()" style="background: rgba(172, 255, 47, 0); margin-top:3px;">
+    <button class="faded" *ngIf="post.data | async; else load; let data;" (click)="viewpost(post.key,data)" ion-item no-lines
+      style="background: rgb(253, 253, 253); border-radius:5px;  padding:0; width:100%; height: 80px; margin:auto;  ">
+      <div text-center [ngStyle]="{'background-image': 'url(' + data.photo + ')'}"
+        style="background-color:rgba(255, 192, 203, 0.185); margin-left: 3px; border-radius:2px;  color:white; background-size: cover; display: inline-block; width:60px; height:60px;"
+        item-start>
+      </div>
+      <ion-grid item-end style="background: rgba(194, 196, 42, 0); padding:0;">
+        <ion-row nowrap style="background:rgba(255, 255, 255, 0);">
+          <ion-col col-12 style=" background:rgba(255, 255, 255, 0); padding:0;">
+            <div text-nowrap style="width:100%; display: inline-block; font-weight: bold; ">
+              <div
+                style="width:100%; text-overflow:ellipsis; overflow: hidden; float: left; color:rgb(71, 71, 71);  background:rgba(11, 177, 11, 0); ">
+
+                <div class="food-type-icon"
+                  [style.border-color]="data.type=='veg' ? 'green' : data.type=='nonveg' ? '#da1d2d' : 'orange'">
+                  <span
+                    [style.background-color]="data.type=='veg' ? 'green' : data.type=='nonveg' ? '#da1d2d' : 'orange'"></span>
+                </div>
+
+                {{data.name}}
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row style="background:rgba(75, 188, 196, 0); padding:0;">
+          <ion-col>
+            <div style="background: rgba(196, 42, 42, 0); color:rgb(131, 131, 131); font-size: 12px;">
+              <span *ngIf="!(data.postEnded | async) && availability(data.availableTill)" >
+                <span *ngIf="data.availability | async"><span style="color:rgb(30, 173, 30);">Available</span> at <span
+                   class="rupee" style="color:rgba(223, 43, 97, 0.986);"> {{data.price}}</span></span>
+                <span *ngIf="!(data.availability | async)"><span style="color:rgb(204, 5, 15);">Unavailable</span></span>
+              </span>
+              <span *ngIf="(data.postEnded | async) || !availability(data.availableTill)" style="color:#ee8d1d; font-size: 8px; border-radius: 2px; padding:2px; border:1px solid #ee8d1d;">CLOSED</span>
+              • 
+              <span [style.background-color]="(post.orders | async) > 0 ? '#ca1b41' : '#c0c0c0'" style="border-radius: 3px; padding: 0px 3px 0px 3px; color: white; font-size: 10px;" >{{post.orders | async}} Orders</span>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </button>
+    <ng-template #load>
+      <ion-item no-lines style="width:100%; height:80px; padding:0; background: #f5f8fc; position: relative;">
+        <div item-start
+          style="background:#eef1f5; color:white; margin-left: 3px; border-radius:2px; background-size: cover;  display: inline-block; width:60px; height:60px;">
+        </div>
+        <ion-grid no-padding item-end>
+          <ion-row>
+            <div style="height:4px; width:100%;"></div>
+          </ion-row>
+        </ion-grid>
+        <div class="loader"></div>
+      </ion-item>
+    </ng-template>
+  </div>
+
+  <div *ngIf="!(Posts | async)?.length"
+    style="box-shadow:inset 1px -20px 30px -4px rgba(51, 51, 51, 0.03); background:rgb(248, 248, 248); border-radius:0 0 30% 30%; padding:20px; line-height:70px; font-size:x-large; color:rgb(167, 167, 167); "
+    text-center>
+    <ion-icon name="restaurant" large></ion-icon>
+    <br />Getting your posts
+  </div>
+
+  <br /><br />
+
+</ion-content>
+
+<div class="showUp" style="position: fixed; bottom:15px; right:15px; z-index:1000000000;">
+    <button (click)="addpost()" ion-fab large color="mycolor">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </div>

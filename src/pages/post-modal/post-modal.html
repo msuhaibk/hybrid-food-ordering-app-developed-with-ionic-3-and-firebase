@@ -1,0 +1,230 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Post some food</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only color="fav" (click)="closemodal();">Cancel</button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="padding" scroll="false">
+  <div style="color: #aaaaaa;
+  padding: 5px;
+  font-size: 10px;
+  text-align: center;
+"> Below is your address for this post.</div>
+  <button ion-item color="transwhite" detail-none (click)="goUpdateLocation()" style="font-size: 11px;
+ color: rgb(168, 167, 167);
+ width: 100%;
+ max-height: 55px;
+ padding: 10px;
+ overflow: hidden;
+ white-space: pre-wrap;
+ background: rgba(223, 223, 223, 0.15);
+">
+    <span *ngIf="usingLocation; else noloc; let loc;"
+      style="white-space: normal; max-height: 69px; display: inline-block; overflow: hidden;">
+      <ion-icon name="pin"></ion-icon> {{loc?.subAddress}} {{loc?.address}}
+    </span>
+    <ng-template #noloc><span>
+        <ion-icon name="add"></ion-icon> Add a new location
+      </span></ng-template>
+  </button>
+  <br />
+
+  <div *ngIf="isimage() | async; else sele;">
+    <div text-center style="padding: 5px; color: rgb(192, 111, 111);">Images Ready to Upload.</div>
+  </div>
+  <ng-template #sele>
+    <div text-center style="color:rgb(143, 142, 142);">Please add images of food.</div>
+  </ng-template>
+
+
+  <ion-scroll text-center scrollX="true" direction="x"
+    style="overflow: scroll;  height:155px; white-space: nowrap; background: transparent; ">
+    <div *ngFor="let photo of photos; let id = index" class="block"
+      style="display: inline-block; height:145px; width: 145px; background-color: #f1d8df;  margin:5px 0 5px 5px; border-radius:10px; overflow: hidden; ">
+      <ion-icon name="trash" class="deleteIcon" (click)="deletePhoto(id)"></ion-icon>
+      <img [src]="photo" *ngIf="photo" height="100%" />
+    </div>
+
+
+    <div class="block" style="
+    display:  inline-block;
+    height:  145px;
+    width:  145px;
+    margin: 5px 5px 5px 5px;
+    overflow:  hidden;
+    border-radius:  10px;
+">
+
+      <button ion-button color="grey" (click)="takePhoto()" style="display: inline-block;
+    height: 145px;
+    width: 145px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: unset;">
+        <span style="flex-direction:column; justify-content:space-evenly; color: rgb(189, 189, 189);">
+          <ion-icon name="camera"></ion-icon> Add Photo
+        </span>
+      </button>
+
+    </div>
+
+
+  </ion-scroll>
+
+
+  <form [formGroup]="foodForm"  role="form">
+
+    <ion-item class="itemki">
+      <ion-label color="primary" required stacked>Title</ion-label>
+      <ion-input formControlName="title"
+        [class.invalid]="!foodForm.controls.title.valid && foodForm.controls.title.dirty" type="text"
+        placeholder="write a precise title"></ion-input>
+    </ion-item>
+    <div class="validation-errors"
+      *ngIf="!foodForm.get('title').valid && foodForm.get('title').dirty || foodForm.get('title').touched">
+      <ng-container *ngFor="let validation of validation_messages?.title">
+        <span class="error-message"
+          *ngIf="foodForm.get('title').hasError(validation.type) && (foodForm.get('title').dirty || foodForm.get('title').touched)">
+          {{ validation.message }}
+        </span>
+      </ng-container>
+    </div>
+
+    <ion-item class="itemki">
+      <ion-label color="primary" required stacked>Description</ion-label>
+      <ion-textarea formControlName="description" type="text" placeholder="describe your cuisine in good words">
+      </ion-textarea>
+    </ion-item>
+
+    <div class="validation-errors"
+      *ngIf="!foodForm.get('description').valid && foodForm.get('description').dirty || foodForm.get('description').touched">
+      <ng-container *ngFor="let validation of validation_messages?.description">
+        <span class="error-message"
+          *ngIf="foodForm.get('description').hasError(validation.type) && (foodForm.get('description').dirty || foodForm.get('description').touched)">
+          {{ validation.message }}
+        </span>
+      </ng-container>
+    </div>
+
+    <ion-grid>
+      <ion-row text-center>
+        <ion-col text-center>
+          <ion-item class="itemki" style="width: min-content;">
+            <ion-label color="primary" required stacked>Total plates</ion-label>
+            <ion-input formControlName="plates" type="number" min="1"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col text-center>
+          <ion-item class="itemki" style="width: min-content;">
+            <ion-label color="primary" required stacked>Serves</ion-label>
+            <ion-input formControlName="serves" type="number" min="1"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col text-center>
+          <div class="itemki" [style.border-color]="foodForm.get('availableTill').value ? '#8ad08a' : '#de7676'"
+            style="width: min-content;">
+            <ion-label color="primary" style="white-space: normal;" required stacked>Available For (hours)</ion-label>
+            <div style="width: 100%; display: flex; flex-flow: nowrap; align-items: baseline; background: rgba(201, 45, 71, 0); margin:auto;">
+                <button color="mycolor" small round icon-only float-left clear ion-button (tap)="stepdown();">
+                  <ion-icon name="remove"></ion-icon>
+                </button>
+                <input formControlName="availableTill" readonly text-center style="clear: both; background: transparent; font-size:14px; color:rgb(71, 71, 71); border:none; margin: auto;"
+                  id="myplates" type="number" step="1" min="1" max="24" />
+                <button color="mycolor" small round icon-only float-right clear ion-button (tap)="stepup();">
+                  <ion-icon name="add"></ion-icon>
+                </button>
+              </div>
+            </div>
+        </ion-col>
+      </ion-row>
+      <ion-row text-center>
+        <ion-col text-center>
+          <div style="
+          font-size: 9px;
+          color: grey;
+          width:  100%;
+          height:  100%;
+          display:  flex;
+          padding: 5px;
+          justify-content:  center;
+          align-items:  center;
+      ">
+            <span> 
+             Note: Net price will be the addition of 10% of the given price plus Rs.10 delivery charge for the buyers.You can seek help from the admin.
+            </span>
+          </div>
+        </ion-col>
+        <ion-col text-center>
+          <ion-item class="itemki" style="width: min-content;">
+            <ion-label color="primary" required stacked>Per-Plate Price</ion-label>
+            <ion-input formControlName="price" type="number" placeholder></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+
+    <div class="itemki" [style.border-color]="foodForm.get('type').value ? '#8ad08a' : '#de7676'"
+      style="overflow: scroll; height:min-content; white-space: nowrap; ">
+
+      <div text-center style="
+        padding:  3px;
+        color: grey;
+    ">Select the type of food</div>
+
+      <ion-list text-center no-lines radio-group formControlName="type" ngDefaultControl>
+        <ion-item style="display: inline-block; max-width: min-content;" required>
+          <ion-label>Veg</ion-label>
+          <ion-radio value="veg"></ion-radio>
+        </ion-item>
+        <ion-item style="display: inline-block; max-width: min-content;">
+          <ion-label>Non-Veg</ion-label>
+          <ion-radio value="nonveg"></ion-radio>
+        </ion-item>
+
+      </ion-list>
+
+    </div>
+
+    <ion-item class="itemki">
+      <ion-label>Delivery Service only</ion-label>
+      <ion-toggle [(ngModel)]="deliveryTog" disabled="true" [ngModelOptions]="{standalone: true}"></ion-toggle>
+    </ion-item>
+
+    <ion-item class="itemki">
+      <ion-label>Tags<sub>(optional)</sub></ion-label>
+      <ion-select [(ngModel)]="selectedTags" multiple="true" [ngModelOptions]="{standalone: true}">
+        <ion-option *ngFor="let tag of tags" [value]="tag">{{tag}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+
+
+    <div text-center
+      style="font-size:12px; height: min-content; background: #eddddd; color: rgb(196, 171, 171); padding:5px;"
+      *ngIf="!foodForm.valid || !usingLocation || !(isimage() | async)">
+      <span>Please fill the complete form
+        carefully before
+        you can submit.</span>
+    </div>
+
+    <ion-row class="sign-in-button-container">
+      <ion-col text-center>
+        <button ion-button block color="secondary"
+          [disabled]="!foodForm.valid || !usingLocation || !(isimage() | async) || submitted" role="button"
+          type="submit" (click)="postfood()">
+          <span *ngIf="!foodForm.valid || !(isimage() | async)">fill complete form</span>
+          <span *ngIf="foodForm.valid && (isimage() | async)">Post Food</span>
+        </button>
+      </ion-col>
+    </ion-row>
+
+  </form>
+  <br />
+
+
+</ion-content>

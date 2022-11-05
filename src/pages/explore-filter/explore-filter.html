@@ -1,0 +1,57 @@
+<ion-header no-border>
+  <ion-navbar>
+        <ion-buttons left>
+                <button ion-button icon-only clear small color="mycolor" (click)="closemodal();"><ion-icon name="close"></ion-icon></button>
+     </ion-buttons>
+      <ion-title text-center><span class="options-container">FILTER RESULTS</span></ion-title>
+      <ion-buttons right>
+        <button color="mycolor" (click)="resetOptions()"  ion-button clear  small>
+          Reset 
+        </button>
+      </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding modalEnter="modal-slide-in" modalLeave="modal-slide-out" style="background:#ffffff;">
+
+    <div  class="options-container">
+        
+        <br />
+        <div class="fadeIn">
+    
+          <div text-start padding>DISTANCE MATTERS</div>
+          <div style="width:80%; margin:auto;">
+            Showing results from <ion-badge color="mycolor">{{ myoptions.radius }} m </ion-badge>
+            <ion-range [(ngModel)]="myoptions.radius" min="100" max="30000" step="1000" snaps="true" color="mycolor">
+                <ion-icon range-left name="walk"></ion-icon>
+                <ion-icon range-right name="bicycle"></ion-icon>
+            </ion-range>
+          </div>
+          <div text-start padding>SHOWING CATEGORIES</div>
+          <ion-grid no-padding>
+          <ion-row>
+            <ion-col>
+              <ion-item no-lines no-padding style="background:transparent;">
+                <ion-checkbox item-start color="secondary"  [(ngModel)]="myoptions.veg"></ion-checkbox>
+                <div item-start style="color:rgb(3, 189, 3);">Veg</div>
+              </ion-item>
+            </ion-col>
+            <ion-col>
+              <ion-item no-lines no-padding style="background:transparent;">
+                <ion-checkbox item-start color="mycolor"  [(ngModel)]="myoptions.nonveg"></ion-checkbox>
+                <div item-start style="color:rgb(202, 35, 57);">Non-Veg</div>
+              </ion-item>
+            </ion-col>
+            <!-- <ion-col>
+                <ion-item no-lines no-padding style="background:transparent;">
+                  <ion-checkbox item-start color="myorange"  [(ngModel)]="myoptions.mixed" ></ion-checkbox>
+                  <div item-start style="color:rgb(243, 139, 2);">Mixed</div>
+                </ion-item>
+              </ion-col> -->
+          </ion-row>   
+          </ion-grid>
+        </div> 
+      <div text-center  class="applyFil"><button [disabled]="!(myoptions != filters)" ion-button mode="ios" full  style="letter-spacing:2px; border-radius: 5px;" color="mycolor" (click)="saveOptions(myoptions)">APPLY FILTER</button></div>
+      </div>
+    
+</ion-content>

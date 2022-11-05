@@ -1,0 +1,226 @@
+<div style="position: fixed; bottom:15px; right:15px; z-index:1000000000;">
+  <button (touchstart)="vibrat()" (click)="setBuyer()" ion-fab large color="mycolor">
+    <ion-icon name="list-box"></ion-icon>
+  </button>
+</div>
+
+<ion-content style="background-color: rgb(255, 255, 255); background-image: url('./assets/imgs/vector-background1.png'); background-size: 190px; ">
+
+
+  <div style="background-color: rgb(255, 255, 255); box-shadow: inset 0 3px 35px 5px white; background-image: url('./assets/imgs/vector-background1.png'); background-size: 190px; max-height: 100px; position:relative; z-index:100; padding:3px; box-sizing: border-box;  color:rgb(202, 27, 65);">
+    <div text-center style="font-size:20px; letter-spacing:2px; padding:4px; font-family: cursive;">Explore Qziine
+    </div>
+    <div style="width:60%; margin:5px auto; overflow: hidden;" (click)="goSearchModal()">
+      <div text-nowrap
+        style="background:rgba(255, 255, 255, 0.856); overflow: hidden; position: relative; border-radius:50px; display: flex; align-content:flex-start; justify-content:first baseline; height:28px; padding:5px; font-size: 18px; box-sizing: border-box; width:100%;">
+        <ion-icon left name="search"></ion-icon> <span
+          style="margin-left:10px;  font-size:13px; color: rgb(214, 214, 214); font-weight: lighter; letter-spacing: 2px;">
+          Search Qziine here...</span>
+        <div class="loader"></div>
+      </div>
+    </div>
+    <div *ngIf="!foods.length" style="width:50px; height:auto; position:absolute; top:7%; left:0;">
+      <div class="bar" style="animation-delay:0.8s;"></div>
+      <div class="bar" style="animation-delay:1s;"></div>
+      <div class="bar"></div>
+      <div class="bar" style="animation-delay:1.3s;"></div>
+    </div>
+
+    <span *ngIf="foods.length" style="position:absolute; left:3px; top:2px;">
+      <button ion-button color="mycolor" small icon-only clear (click)="goNotificationsPage()">
+        <ion-icon name="md-notifications"></ion-icon>
+      </button>
+      <span *ngIf="notifyBadge" class="my-notify-badge" style="right:6px; top:6px;"></span>
+    </span>
+
+    <span style="position:absolute; right:3px; top:2px;">
+      <button ion-button color="mycolor" small menuToggle clear mode="ios" icon-only>
+        <div [style.background-image]="'url(' + (avatar != null ? avatar : './assets/imgs/default-user.png') + ')'"
+          class="myavatar" item-start>
+        </div>
+      </button>
+    </span>
+
+  </div>
+  <div
+    style="background-color: rgba(255, 255, 255, 0.979); background-image: url('./assets/imgs/vector-background1.png'); background-size: 190px; background-position-y: -80px; position: sticky; top:0px; z-index:100; min-height: 35px; color:rgb(202, 27, 65);">
+    <button nowrap class="location-bar" color="mycolor" (click)="goLocationPage()" float-left ion-button clear small>
+      <ion-icon name="pin"></ion-icon> <span style="
+    color: #777777;
+    text-transform: capitalize;
+    font-weight: 900;
+    letter-spacing: 1px;
+    max-width: 60%;
+"> <span *ngIf="locating">Locating you on Planet Earth...</span><span *ngIf="located">{{address}}</span></span>
+    </button>
+    <button color="mycolor" (click)="options()" float-right ion-button clear icon-only small>
+      <ion-icon name="options"></ion-icon>
+    </button>
+  </div>
+  <div (click)="options()" *ngIf="displayOptions" style="position: fixed; background: rgba(0, 0, 0, 0.5); z-index:15;  top:0px; height: 100%; width:100%;"></div>
+
+
+
+  <div style="position: relative; background: rgba(238, 130, 238, 0); z-index:10;">
+
+    <div *ngIf="(!filtered.length && foodGraphic && !locating) || (!myKeys.length && noGeoFire)" class="faded" style="position: absolute;top: 50%;width:100%;height: 100%;display: flex;align-items: center;justify-content: center;flex-direction: column;color: #d99494;">
+     <br/><br/>
+      <span> NOTHING TO SHOW </span>
+<ul>
+    <li>
+    check your location settings.
+    </li>
+      <li>
+    check if filters are applied.
+       Try increasing distance.
+    </li>
+    <li>
+    Try Applying filters again.
+      </li>
+      <li>
+      we are currently serving in Okhla and Aligarh.
+    </li>
+      <li>
+    Either there are no available foods.Try later.
+    </li>
+      <li>
+    contact customer support for any issues.
+    </li>
+</ul>
+    </div>
+    <br />
+
+    <div *ngIf="((!foods.length || !filtered.length) && locating ) && !located" text-center>
+<div class="fadeIn" style="margin: 30% auto 20px auto; background-size:cover; width:130px; height:130px; background-image:url(./assets/imgs/vector-locate.png);">
+</div>
+<br/>
+<span class="faded" text-center style="font-size:11px; font-weight:900; color:rgb(131, 131, 131);">Locating you and searching foods nearby.</span>
+    </div>
+
+
+    <div text-center style="margin-top:10%;">
+      <button ion-button *ngIf="!locating && !located" mode="ios" [disabled]="locating" (click)="locateThenShow()">Try
+        again</button>
+    </div>
+
+    <div *ngIf="filtered.length && !locating" style="color: rgb(212, 150, 164);
+    font-size: 11px;
+    width: 100%;
+    text-align: center;
+    margin: 5px auto 10px auto;">
+      <span>Showing {{filtered.length}} of {{myKeys.length}} results from {{ roundOff(filters.radius*0.001) }}Kms</span>
+    </div>
+
+    <ion-grid no-padding>
+      <ion-row #grids>
+
+        <ion-col col-6 col-md-4 col-xl-3 class="fadeIn" *ngFor="let food of filtered" style="padding:4px; ">
+
+          <div class="grido" *ngIf="food.post; let post;" (touchstart)="touchstart($event)"
+            (touchend)="touchend($event)">
+            <div>
+              <div class="image-container" (click)="gofoodpage(food.key,post.name)" (press)="book(post);"
+                [ngStyle]="{'background-image': 'url(' + post?.photo + ')','background-color': post?.bgColor}">
+                <div class="mytitle">
+                  <span
+                    style="box-shadow:24px 6px 100px 30px rgba(0, 0, 0, 0.5); background: transparent; display: inline-block; "></span>
+                  <div class="food-type-icon"
+                    [style.border-color]="post?.type=='veg' ? 'green' : post?.type=='nonveg' ? '#da1d2d' : 'orange'">
+                    <span
+                      [style.background-color]="post?.type=='veg' ? 'green' : post?.type=='nonveg' ? '#da1d2d' : 'orange'"></span>
+                  </div>
+                  {{post?.name}}
+                </div>
+                <span class="plates-left">{{post?.platesLeft}} <ion-icon name="md-radio-button-on"></ion-icon></span>
+                <span class="distance">{{post?.howFar}} m</span>
+              </div>
+              <button ion-button (click)="showInterest($event,post.key)" class="heart" clear icon-only>
+                <ion-icon [color]="likedKeys.indexOf(post.key) > -1 ? 'fav' : 'light'" name="heart"></ion-icon>
+              </button>
+              <div style="height: 33px; width: 100%; background-color: rgb(253, 253, 253); background-image: url(./assets/imgs/dot.png); background-size: 4px; box-shadow: inset 0 0 15px 5px #ffffff; background-repeat: repeat;">
+                <div text-nowrap
+                  style="height:40%; font-size:8px; color:seagreen; width: 100%; text-align: center; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; background: rgba(222, 184, 135, 0); padding:1px; box-sizing: border-box;">
+                  <span> #Post </span><span *ngFor="let tag of post?.tags"> #{{tag}} </span>
+                </div>
+                <div
+                  style="height:60%; width: 100%; background: rgba(118, 245, 45, 0); display: flex; align-items:center; justify-content:center;">
+                  <span class="rupee" style="font-size:14px; color:rgb(233, 58, 96);"> {{netPrice(post?.price)}}</span>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </ion-col>
+        <ion-col *ngIf="filtered.length % 2 != 0" col-6 col-md-4 col-xl-3 class="fadeIn" style="padding:4px; ">
+          <div class="grido" text-center>
+              <div style="
+              display: flex;
+              align-items: center;
+              flex-direction:  column;
+              justify-content: center;
+              padding: 5px;
+              height: 183px;
+              ">
+                <div class="faded" style="margin:0 auto;background-size:cover;width:70px;height:70px;background-image: url(./assets/imgs/vector-flowerheart.png);">   
+                </div>
+              <span style="
+              color: rgb(235, 217, 217);
+              font-size: 12px;
+              font-weight: bolder;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 5px;
+              height: 113px;
+              ">
+              We bridge the gap between hunger and cost and make things even in odd ways.
+            </span>
+      </div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <div *ngIf="loading" style="padding:2px;">
+      <ion-grid no-padding>
+        <ion-row>
+          <ion-col style="padding:5px;">
+            <div class="item">
+              <div class="loader"></div>
+            </div>
+          </ion-col>
+          <ion-col style="padding:5px;">
+            <div class="item">
+              <div class="loader" style="animation-delay: .33s"></div>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col style="padding:5px;">
+            <div class="item">
+              <div class="loader"></div>
+            </div>
+          </ion-col>
+          <ion-col style="padding:5px;">
+            <div class="item">
+              <div class="loader" style="animation-delay: .33s"></div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+    </div>
+
+    <br /><br />
+
+    <div text-center *ngIf="noPosts" class="fadeIn"
+      style="font-size:11px; color:rgb(168, 168, 168); letter-spacing: 1px;">
+      No more to show.
+    </div>
+    <ion-infinite-scroll *ngIf="myKeys.length" threshold="5px" (ionInfinite)="$event.waitFor(loadMorePosts())">
+      <ion-infinite-scroll-content color="mycolor" loadingSpinner="crescent">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </div>
+
+</ion-content>

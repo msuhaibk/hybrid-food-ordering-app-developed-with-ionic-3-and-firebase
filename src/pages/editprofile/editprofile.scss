@@ -1,0 +1,53 @@
+page-editprofile {
+
+
+    .itemki {
+        background-color: #fdfdfd;
+        margin: 5px auto 5px auto;
+        width: 85%;
+        min-height: 40px;
+        border-radius: 8px;
+        border: 1px solid #e2e2e2;
+        padding: 5px;
+      }
+                        .ng-valid {
+                          border-color: #8ad08a;
+                        }
+                        
+                      .ng-touched .ng-invalid {
+                          border-color: #de7676;
+                        }
+      
+      .item-md.item-block .item-inner {
+        padding-right: unset; 
+        border-bottom: none;
+      }
+      .item-md.item-block .item-inner {
+        padding-right: unset;
+        border-bottom: none;
+      }
+      
+      .label-md-primary, .item-input .label-md-primary, .item-select .label-md-primary, .item-datetime .label-md-primary {
+        color: #b19ea2;
+      }
+        
+
+    .validation-errors{
+
+        padding:8px;
+        font-size: 8px;
+    
+      }
+    
+      .error-message{
+    
+        padding:5px;
+        color: rgb(165, 40, 31);
+        text-align: center;
+        background: rgb(247, 247, 247);
+        border-radius:10px;
+        margin:8px 0 0 15px;
+        display:inline-block;
+      }
+
+}

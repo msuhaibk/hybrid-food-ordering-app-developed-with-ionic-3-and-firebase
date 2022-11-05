@@ -1,0 +1,209 @@
+<ion-header no-border>
+
+  <ion-navbar no-border>
+    <ion-title>SellersOrders</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content style="background:rgb(250, 250, 250);">
+    <div class="menu-bar">
+      <span *ngIf="(activeOrders | async)?.length; else waiting; let len;">{{len}} active orders</span>
+    <ng-template #waiting>Waiting for orders</ng-template>
+    </div>
+
+  <ion-list no-lines style="margin-top:52px;">
+
+    <div *ngFor="let order of (activeOrders | async)?.slice().reverse()" style="background: rgba(172, 255, 47, 0); margin-top:8px; width:100%; height:100px;" >
+      <button class="faded" no-padding ion-item (click)="viewOrder(order?.key,ordersList.order?.orderId)" (press)="orderActions(order?.key,ordersList.order?.orderId)" style="height:100px;   background-color: rgb(255, 255, 255); "
+      *ngIf="(order?.ordersList | async); else loading; let ordersList;">
+        <ion-grid no-padding style="background: rgba(221, 61, 88, 0); margin:0; ">
+          <ion-row style="background: #3ddd4500; height: 100px;">
+            <ion-col text-center [ngStyle]="{'background-image': 'url(' + (ordersList?.food | async)?.photo + ')'}" col-4 style=" color:white; display: flex; align-items: center; justify-content: center; box-shadow:inset 1px 20px 30px -4px rgba(26, 26, 26, 0.5); position: relative; background-color: rgb(213, 91, 120); background-size: cover;">
+
+              <span style="font-size:12px; position: absolute; top:2px; left:1px;">{{myTime(ordersList.order?.orderedAt)}}</span>
+
+              <div style="width:10px; height:100%; background: url('./assets/imgs/tri.png');   background-position: right; background-size:7px;  background-repeat: repeat-y;   position:absolute; right:-1px; top:0;"></div>
+    <div *ngIf="ordersList.order?.plates; let plates;" style="background-color: rgb(199, 206, 205); animation: bulge 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation-delay:0.5s;
+    text-align: center; height: 40px;  line-height:40px; width:40px; border-radius:100%;" [style.background-color]="plates > 10 ? '#e5da07' : plates > 7 ? '#b313d5' : plates > 5 ? '#ff6d0e': plates > 3 ? '#0fb3de' : plates > 0 ? '#11bd44' : 'grey' " >{{plates}}</div>
+              <div text-center style="position:absolute; font-size:8px; width:100%; text-overflow: ellipsis; overflow: hidden;  left:0px; text-shadow: 0 0 10px rgba(0, 0, 0, 0.541); padding:2px; bottom:0px;">
+                {{(ordersList?.food | async)?.name}}
+              </div>
+            </ion-col>
+            <ion-col col-8 padding class="faded" *ngIf="(ordersList?.profile | async); else buyer; let pro;">
+                <ion-row  >
+                    <div style="width:100%; min-height:15px; color:rgb(189, 25, 79);  font-size:12px; padding:1px; overflow: hidden; text-overflow:ellipsis;">                
+                      #{{ordersList.order?.orderId || 'OrderId'}}
+                    </div>
+                  </ion-row>
+              <ion-row>
+
+                <div  style="background:rgba(168, 46, 46, 0); display: flex; padding:2px; flex-direction: row; align-items: baseline; width:100%; ">
+
+                  <div style="width:21px; height:21px;  background-color: rgba(197, 197, 197, 0.76); border-radius:100%; overflow:hidden; float:left;"
+                    small>
+                    <img [src]="pro[0]?.dp != null ? pro[0]?.dp : './assets/imgs/default-user.png'" />
+                  </div>
+
+                  <div style="width:85%; background: rgba(61, 104, 221, 0); float:left; margin-left: 3px;">
+                    <div text-nowrap style="width:100%; float:left; color:rgb(44, 44, 44);  font-size:10px; padding:1px; overflow: hidden; text-overflow:ellipsis;">{{pro[0]?.fname}} {{pro[0]?.lname}}</div>
+                    <div text-nowrap style="width:100%; font-size:7px; color:rgb(172, 172, 172); padding:1px; overflow: hidden; text-overflow:ellipsis;">{{ordersList.order?.locationObj?.address}}</div>
+                  </div>
+                </div>
+                <ng-template #buyer>
+                  <div>Buyer...</div>
+                </ng-template>
+              </ion-row>
+              <ion-row>
+                <div text-center style="margin-left:5px;">
+                
+              <div class="faded" *ngIf="order.status | async; else load; let statuses;" style="background: rgba(196, 42, 42, 0);">
+                <span *ngFor="let status of statuses; let lst = last;">
+                  <span *ngIf="lst" text-nowrap style="text-transform: capitalize; ">
+                  <h1 style="font-size:2.1rem;"  [style.color]='(status[0].key == "booked") ? "#03b31b" : (status[0].key == "accepted") ? "#66b4b1" : (status[0].key == "prepared") ? "#db8a54" : (status[0].key == "hampered") ? "#a4b26c" : (status[0].key == "dispatched") ? "#ae6ab4" : (status[0].key == "received") ? "#4c7aa4" : (status[0].key == "cancelled") ? "#c14d4d" : "#c5c46a" '>
+                        {{ status[0].key}}
+                      <sup style="color:rgba(107, 106, 106, 0.514); font-size:11px;">{{myTime(status[0].value)}}</sup>
+                    </h1>
+                  </span>
+                </span>
+                </div>
+                  <ng-template #load>
+                    <div style="font-size:2.1rem; overflow: hidden; display:inline-block; color:rgb(233, 233, 233); position: relative; letter-spacing:4px; font-weight: bolder; font-family:Arial, Helvetica, sans-serif;">
+                      STATUS
+                      <div class="do" style="width:45px; height:90%; position: absolute; top:0; left:0; background:rgb(253, 253, 253); box-shadow:0 0 25px 8px rgb(253, 253, 253);"></div>
+                    </div>
+                  </ng-template>
+                </div>
+              </ion-row>
+              <ion-row style="padding: 0 2px 2px 5px;">
+                <div style=" width:100%; padding: 1px; color:rgb(158, 153, 153); font-size: 11px; text-transform: capitalize;">     
+    <span *ngIf="ordersList.order?.serviceType; let service;">
+          <ion-icon *ngIf='service == "self"' name='ios-walk'></ion-icon>
+          <ion-icon *ngIf='service == "delivery"' name='bicycle'></ion-icon> 
+          {{service}} 
+    </span>
+    •
+    <span>
+       <span *ngIf="!(order.paymentDone | async)" style="color:rgb(151, 16, 16);"><ion-icon name="close-circle"></ion-icon> unpaid</span>
+       <span *ngIf="order.paymentDone | async" style="color:rgb(13, 151, 0);"><ion-icon name="checkmark-circle"></ion-icon> paid</span>
+  </span>
+ 
+    
+              </div>
+              </ion-row>
+
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+      </button>
+    <ng-template #loading> 
+      <ion-item style="width:100%; height:100px; padding:0; background: #f5f8fc; position: relative;">
+          <div item-start style="background:#eef1f5; color:white; border-radius:0px; background-size: cover;  display: inline-block; width:100px; height:100%;"></div>
+     <ion-grid no-padding item-end>
+       <ion-row>
+         <div style="height:4px; width:100%;"></div>
+       </ion-row>
+      </ion-grid>
+      <div class="loader"></div>
+        </ion-item>
+    </ng-template>
+  </div>
+
+
+  <div *ngIf="!(activeOrders | async)?.length" style="box-shadow:inset 1px -20px 30px -4px rgba(51, 51, 51, 0.03); background:rgb(248, 248, 248); border-radius:0 0 30% 30%; padding:20px; line-height:70px; font-size:x-large; color:rgb(167, 167, 167); "
+    text-center>
+    <ion-icon name="restaurant" large></ion-icon>
+    <br/>Your active orders</div>
+
+    <div *ngIf="loadClicked" class="menu-bar" style="position: static;">
+      <span *ngIf="(prevOrders | async)?.length; else noprev; let len;">{{len}} previous orders</span>
+      <ng-template #noprev>loading previous orders</ng-template>
+     <br/><span *ngIf="!(prevOrders | async)?.length;">No previous orders</span>
+    </div>
+
+    <div *ngFor="let order of (prevOrders | async)?.slice().reverse()" style="background: rgba(172, 255, 47, 0); margin-top:8px; width:100%; height:70px;" >
+      <button no-padding ion-item style="height:70px;   background-color: rgb(255, 255, 255); "
+      *ngIf="(order?.ordersList | async); else loading; let ordersList;">
+        <ion-grid no-padding style="background: rgba(221, 61, 88, 0); margin:0; ">
+          <ion-row style="background: #3ddd4500; height: 70px;">
+            <ion-col text-center text-center [ngStyle]="{'background-image': 'url(' + (ordersList?.food | async)?.photo + ')'}" col-4 style=" color:white; display: flex; align-items: center; justify-content: center; box-shadow:inset 1px 20px 30px -4px rgba(26, 26, 26, 0.5); position: relative; background-color: rgb(240, 239, 239); background-size: cover;">
+
+              <span style="font-size:10px; position: absolute; top:2px; left:1px;">{{myTime(ordersList.order?.orderedAt)}}</span>
+
+              <div style="width:10px; height:100%; background: url('../assets/imgs/tri.png');   background-position: right; background-size:7px;  background-repeat: repeat-y;   position:absolute; right:-1px; top:0;"></div>
+    <div *ngIf="ordersList.order?.plates; let plates;" style="background-color: rgb(204, 204, 204); animation: bulge 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation-delay:0.5s;
+    text-align: center; height: 30px; font-size:12px;  line-height:30px; width:30px; border-radius:100%;" >{{plates}}</div>
+              <div text-center style="position:absolute; font-size:10px; width:100%; overflow: hidden;  left:0px; text-shadow: 0 0 10px rgba(0, 0, 0, 0.541); padding:2px; bottom:1px;">
+                {{(ordersList?.food | async)?.name}}
+              </div>
+            </ion-col>
+            <ion-col col-8 padding>
+              <ion-row>
+
+                <div *ngIf="(ordersList?.profile | async); else buyer; let pro;" style="background:rgba(168, 46, 46, 0); display: flex; padding:2px; flex-direction: row; align-items: baseline; width:100%; ">
+
+                  <div style="width:25px; height:25px;  background-color: rgba(197, 197, 197, 0.76); border-radius:100%; overflow:hidden; float:left;"
+                    small>
+                    <img [src]="pro[0]?.dp != null ? pro[0]?.dp : './assets/imgs/default-user.png'" />
+                  </div>
+
+                  <div style="width:85%; background: rgba(61, 104, 221, 0); float:left; margin-left: 3px;">
+                    <div text-nowrap style="width:100%; float:left;  font-size:12px; padding:1px; overflow: hidden; text-overflow:ellipsis;">{{pro[0]?.fname}} {{pro[0]?.lname}}</div>
+                    <div text-nowrap style="width:100%; font-size:10px; color:rgb(172, 172, 172); padding:1px; overflow: hidden; text-overflow:ellipsis;">211 Jamia Nagar,Okhla kjlkasjdljlkjaslkdj kjlkjljlk</div>
+                  </div>
+                </div>
+                <ng-template #buyer>
+                  <div>Buyer...</div>
+                </ng-template>
+              </ion-row>
+              <ion-row>
+                <div text-center style="margin-left:5px;">
+                
+              <div *ngIf="order.status | async; else load; let statuses;" style="background: rgba(196, 42, 42, 0);">
+                <div *ngFor="let status of statuses; let lst = last;">
+                  <span *ngIf="lst" text-nowrap style="text-transform: capitalize; ">
+                  <h1 style="font-size:2.1rem;" [style.color]='(status[0].key == "booked") ? "#03b31b" : (status[0].key == "prepared") ? "#df5900" : (status[0].key == "dispatched") ? "#a20daf" : (status[0].key == "received") ? "#089bdf" : (status[0].key == "cancelled") ? "#b91212" : "#e0dd00" '>
+                        {{ status[0].key}}
+                      <sup style="color:rgba(107, 106, 106, 0.514); font-size:11px;">{{myTime(status[0].value)}}</sup>
+                    </h1>
+                  </span>
+                </div>
+                </div>
+                  <ng-template #load>
+                    <div style="font-size:2.1rem; overflow: hidden; display:inline-block; color:rgb(233, 233, 233); position: relative; letter-spacing:4px; font-weight: bolder; font-family:Arial, Helvetica, sans-serif;">
+                      STATUS
+                      <div class="do" style="width:45px; height:90%; position: absolute; top:0; left:0; background:rgb(253, 253, 253); box-shadow:0 0 25px 8px rgb(253, 253, 253);"></div>
+                    </div>
+                  </ng-template>
+                </div>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+      </button>
+    <ng-template #loading> 
+      <ion-item style="width:100%; height:70px; padding:0; background: #f5f8fc; position: relative;">
+          <div item-start style="background:#eef1f5; color:white; border-radius:0px; background-size: cover;  display: inline-block; width:100px; height:100%;"></div>
+     <ion-grid no-padding item-end>
+       <ion-row>
+         <div style="height:4px; width:100%;"></div>
+       </ion-row>
+      </ion-grid>
+      <div class="loader"></div>
+        </ion-item>
+    </ng-template> 
+  </div> 
+
+
+
+  </ion-list>
+
+
+
+
+
+
+</ion-content>

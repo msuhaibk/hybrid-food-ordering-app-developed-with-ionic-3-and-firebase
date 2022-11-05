@@ -1,0 +1,22 @@
+page-usertype {
+
+    h1{
+        color: #808080;
+        font-size: 1.6rem;
+        text-transform: capitalize;
+       font-weight: 900;
+    }
+
+    .descrip{
+        color: #626262;
+        font-size:  12px;
+        text-align:  center;
+        font-weight: 200;
+        padding: 5px 10px;
+    }
+
+.bulging{
+    animation: bulge 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation-delay:0s;
+}
+    
+}

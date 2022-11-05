@@ -1,0 +1,60 @@
+page-buyer {
+
+    .mytitle {
+        color:rgb(212, 38, 96); letter-spacing:1px; font-weight: lighter;
+        font-family: cursive;
+    }
+
+    .toolbar-title-md {
+        padding: 2px 12px;
+         font-size: unset;
+    }
+
+    .toolbar-md {
+padding: 0;
+min-height:unset;
+
+    }
+
+    .avtr{
+        margin-top:0px;
+        width:32px;
+        height:32px;
+        border-radius:500px;
+        overflow: hidden;
+        background-color:rgb(236, 212, 218);
+        background-size: cover;
+    }
+
+    .item ion-thumbnail {
+        min-width: 100px;    
+        min-height: 100px;
+        img {
+            max-width: 100%;    
+            min-width: 100%;
+        }
+    }
+
+    ion-spinner * {
+        width: 30px;
+        height: 30px;
+        stroke: rgb(248, 12, 12);
+        fill: rgb(192, 4, 4);
+      }
+
+      ion-icon[aria-label="restaurant"]{
+color:rgb(179, 6, 49);
+      }
+ 
+      ion-icon[aria-label="people"]{
+        color:rgb(158, 22, 56); 
+              }
+              ion-icon[aria-label="heart"]{ 
+                color:rgb(218, 29, 45);
+                      }
+
+                      .button-effect {
+                          display: block;
+                      }
+
+}

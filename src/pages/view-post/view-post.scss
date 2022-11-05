@@ -1,0 +1,35 @@
+page-view-post {
+
+    .avtr{
+        margin-top:0px;
+        width:32px;
+        height:32px;
+        border-radius:500px;
+        overflow: hidden;
+        background:rgb(224, 4, 70);
+    }
+
+   .post-detail{
+        width:  100%;
+        padding: 8px;
+        white-space:  normal;
+        background: #f8f8f8;
+        border: 1px dashed #dcdbdb;
+        margin-top:5px;
+    }
+
+   .post-detail-title {
+    font-size:  16px;
+    font-weight: 900;
+    color: #565656;
+    text-decoration:  underline;
+    }
+
+    .post-detail-value{
+     color: #c35166;
+    font-size:  13px;
+    padding:  4px;
+    white-space: normal;
+    }
+
+}

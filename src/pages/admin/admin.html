@@ -1,0 +1,235 @@
+<ion-header no-border>
+
+  <ion-navbar no-border>
+    <ion-title>Admin |
+      <span text-center [ngSwitch]="myTab">
+        <span class="faded" *ngSwitchCase="'users'">{{(users | async)?.length}} Users</span>
+        <span class="faded" *ngSwitchCase="'orders'">{{(orders | async)?.length}} Orders</span>
+        <span class="faded" *ngSwitchCase="'notifications'"> Notifications</span>
+        <span class="faded" *ngSwitchCase="'delivery'">{{(delivery | async)?.length}} Delivery</span>
+      </span>
+    </ion-title>
+    <ion-buttons right>
+      <button ion-button clear icon-only color="mycolor" (click)="gousertype()">
+        <ion-icon name="md-swap"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+  <ion-toolbar no-border>
+    <ion-segment color="dark" [(ngModel)]="myTab">
+      <ion-segment-button value="users">
+        Users
+      </ion-segment-button>
+      <ion-segment-button value="orders">
+        Orders
+      </ion-segment-button>
+      <ion-segment-button value="notifications">
+        Notify
+      </ion-segment-button>
+      <ion-segment-button value="delivery">
+        Delivery
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+
+</ion-header>
+
+
+<ion-content>
+
+  <div text-center [ngSwitch]="myTab">
+    <ion-list *ngSwitchCase="'users'">
+      <div *ngIf="users | async; else lu; let users;">
+        <ion-searchbar color="light" mode="ios" [(ngModel)]="terms" no-border></ion-searchbar>
+        <ion-item *ngFor="let user of users | filter : terms:'userHandle'">
+          <span class="mydate">joined | {{user.createdAt | date: 'MMM d, y, h:mm a'}} </span>
+          <br /><span><span class="myname">@{{user.userHandle || 'username'}}</span>
+            <ion-icon *ngIf="user.isVerified" color="myblue" name="checkmark-circle"></ion-icon>
+          </span>
+          <br /><span class="mynum">Phone | {{user.phoneNumber || '**********'}}</span>
+          <button ion-button item-end clear mode="ios" small color="mycolor" (click)="toggleVerified(user)">
+           <span *ngIf="!user.isVerified">Verify</span>
+           <span *ngIf="user.isVerified">Undo</span>          
+          </button>            
+          <button ion-button item-end small clear color="secondary" (click)="viewResult(user,'user')">View</button>
+        </ion-item>
+      </div>
+      <ng-template #lu>
+        <br /><br />
+        <div text-center>
+          <ion-spinner></ion-spinner>
+        </div>
+      </ng-template>
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'orders'">
+      <div *ngIf="orders | async; else lo; let orders;">
+        <ion-searchbar color="light" mode="ios" [(ngModel)]="oterms" no-border></ion-searchbar>
+        <ion-item *ngFor="let order of orders | filter : oterms:'orderId'">
+          <span class="mydate">Date | {{order.orderedAt | date: 'MMM d, y, h:mm a'}}</span>
+          <br /><span class="myname" style="color: #696a69;">#{{order.orderId || 'orderId'}} </span>
+          <br />
+          <span class="mynum" *ngIf="order.cancelledby || order.orderReceived; else pend;">
+            <span style="color:rgb(8, 105, 216);" *ngIf="order.orderReceived">Received</span>
+            <span style="color:rgb(206, 9, 68);" *ngIf="order.cancelledby">Cancelled</span>
+          </span>
+          <ng-template #pend>
+            <span class="mynum" style="color:rgb(224, 160, 20);">Pending</span>
+          </ng-template>
+          <button *ngIf="!order.cancelledby && !order.orderReceived" ion-button item-end small clear color="mycolor" (click)="confirmCancel(order.key)">Cancel</button>          
+          <button ion-button item-end small clear color="secondary" (click)="viewResult(order,'order')">View</button>
+        </ion-item>
+      </div>
+      <ng-template #lo>
+        <br /><br />
+        <div text-center>
+          <ion-spinner></ion-spinner>
+        </div>
+      </ng-template>
+    </ion-list>
+
+    <div *ngSwitchCase="'notifications'">
+      <ion-segment color="dark" [(ngModel)]="notifTab">
+        <ion-segment-button value="all">
+          All
+        </ion-segment-button>
+        <ion-segment-button value="specific">
+          Specific
+        </ion-segment-button>
+      </ion-segment>
+      <div text-center [ngSwitch]="notifTab">
+        <ion-list *ngSwitchCase="'all'">
+          <ion-item>
+            Add notification ?
+            <button ion-button item-end small clear (click)="addNotif()">Add</button>            
+          </ion-item>
+            <div *ngIf="notifications | async; else an; let notifications;">
+            <ion-item *ngFor="let notif of notifications?.slice().reverse()">
+                <span class="mydate">Date | {{notif.postedAt | date: 'MMM d, y, h:mm a'}}</span>
+                <br /><span class="myname" style="color: #696a69;">{{notif.title || 'title for notify'}} </span>
+                <br />
+                <span class="mynum">
+                  <span style="color:rgb(32, 194, 59);" *ngIf="notif.active">Active</span>
+                  <span style="color:rgb(194, 18, 42);" *ngIf="!notif.active">Inactive</span>
+                </span>
+                <button ion-button item-end small clear color="mycolor" (click)="deleteNotif(notif)">Delete</button>            
+                <button ion-button item-end small clear color="secondary" (click)="viewResult(notif,'notification')">View</button>
+              </ion-item>
+            </div>
+            <ng-template #an>
+              <br /><br />
+              <div text-center>
+                <ion-spinner></ion-spinner>
+              </div>
+            </ng-template>
+        </ion-list>
+        <ion-list *ngSwitchCase="'specific'">
+            <ion-item>
+
+              </ion-item>
+        </ion-list>
+      </div>
+    </div>
+
+     <div *ngSwitchCase="'delivery'">
+      <ion-segment color="dark" [(ngModel)]="delivTab">
+        <ion-segment-button value="orders">
+          Orders
+        </ion-segment-button>
+        <ion-segment-button value="boys">
+         Boys
+        </ion-segment-button>
+      </ion-segment>
+      <div text-center [ngSwitch]="delivTab">
+        <ion-list *ngSwitchCase="'orders'">
+          <div *ngIf="delivery | async; else del; let delivery;">
+            <div class="admin-bar">
+                <div style="font-size: 15px;
+                float: left;
+                color: #ca0e0e;
+                font-weight: 900;
+                display: inline-flex;
+                align-items: baseline;" *ngIf="selectedList(delivery); let list;" > <span *ngIf="list.length > 0"> {{list.length}} Selected </span> 
+                <button *ngIf="list.length > 0" ion-button small color="dark" mode="ios" (click)="clearSelect(delivery)">Unselect</button>                 
+              </div>
+                <button ion-button color="secondary" small mode="ios" (click)="promptAssignBoy(delivery)">Assign</button>  
+                <button ion-button small mode="ios" (click)="promptDeleteList(delivery)">Delete</button>  
+            </div>
+            <div *ngFor="let delOrder of delivery; let i=index;">
+              <ion-item *ngIf="delOrder.data | async; else load; let order;">
+              <ion-label>
+                <span class="mydate">Date | {{order.orderedAt | date: 'MMM d, y, h:mm a'}}</span>
+                <span style="color:#ffffff; font-size:9px; background: #20a82b; padding:1px; border-radius:3px; border:1px dotted white;" *ngIf="order.deliveryBoy">Assigned</span>
+                <br /><span class="myname" style="color: #5e5e5e; font-size:11px;">#{{order.orderId || 'order-id'}} - </span>
+              <span style="color:#8b8b8b; font-size:9px;">{{order.locationObj?.address || 'no delivery address found'}}</span>
+                <br />
+                <span class="mynum" *ngIf="order.cancelledby || order.orderReceived; else dpend;">
+                    <span style="color:rgb(8, 105, 216);" *ngIf="order.orderReceived">Received</span>
+                    <span style="color:rgb(206, 9, 68);" *ngIf="order.cancelledby">Cancelled</span>
+                  </span>
+                  <ng-template #dpend>
+                    <span>
+                    <span class="mynum" style="color:rgb(224, 160, 20);">Pending</span>
+                    </span>
+                  </ng-template>
+                </ion-label>
+                <button ion-button item-end small clear color="secondary" (click)="viewResult(order,'delivery order')">View</button>
+             
+                <ion-checkbox color="dark"  [disabled]='order.deliveryBoy && !order.orderReceived' [(ngModel)]="delOrder.checked"  item-left></ion-checkbox>
+      
+              </ion-item>
+              <ng-template #load>
+                  <div style="font-size:14px; text-align: start; font-weight: 900px; color:rgb(100, 100, 100);">
+                    order {{i+1}}
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+            <ng-template #del>
+              <br /><br />
+              <div text-center>
+                <ion-spinner></ion-spinner>
+              </div>
+            </ng-template>
+        </ion-list>
+        <ion-list *ngSwitchCase="'boys'">
+            <ion-item>
+                Add Delivery Boy ?
+                <button ion-button item-end small clear (click)="addBoy()">Add</button>            
+              </ion-item>
+              <div *ngIf="myBoys; else mb; let myBoys;">
+            <ion-item *ngFor="let boy of myBoys;">
+                <span class="mydate">Date | {{boy.createdAt | date: 'MMM d, y, h:mm a'}}</span>
+                <br /><span class="myname" style="color: #5e5e5e;">{{boy.name || 'delivery-boy-name'}}</span>
+                <br />
+                <span class="myname" style="color: #2b7e50;">{{boy.phone || 'phone number'}}</span>
+                <br/>
+                <span class="mynum">
+                  <span style="color:rgb(110, 110, 110);" *ngIf="boy.orders?.length < 1; else torders;">no orders</span>
+                  <ng-template #torders>
+                      <span style="color:rgb(180, 30, 75);">{{ boy.orderslen | async}} Orders</span>
+                  </ng-template>
+                    </span>
+                <button ion-button item-end small clear color="secondary" (click)="viewResult(boy,'delivery boy')">View</button>
+              </ion-item>
+            </div>
+            <ng-template #mb>
+                <br /><br />
+                <div text-center>
+                  <ion-spinner></ion-spinner>
+                </div>
+              </ng-template>
+        </ion-list>
+      </div>
+    </div>
+
+  </div>
+  <div text-center>
+    <br/><br/>
+    <button ion-button (click)="removeTimedPosts()">schedule deletion</button>
+  </div>
+
+
+
+</ion-content>

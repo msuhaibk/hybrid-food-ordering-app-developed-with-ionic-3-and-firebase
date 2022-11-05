@@ -1,0 +1,37 @@
+<ion-header no-border>
+
+  <ion-navbar no-border>
+    <ion-title><div text-center>Rate the seller</div></ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content >
+  <div text-center>
+    <div [style.background-image]="'url(' + (profile?.dp != null ? profile?.dp : './assets/imgs/default-user.png') + ')'" 
+    style="background-color: rgb(206, 206, 206); background-size: cover; width:95px; height:95px; border-radius:100%; overflow:hidden; margin:10px auto;"></div>
+  <span style="font-weight: bold; color:rgb(65, 64, 64);">{{profile?.fname + ' ' + profile?.lname}}</span>
+    <ionic3-star-rating #rating
+  activeIcon = "ios-star"
+  defaultIcon = "ios-star-outline"
+  activeColor = "#a11355" 
+  defaultColor = "#a11355"
+  readonly="false"
+  rating="5"
+  fontSize = "32px"
+  (ratingChanged)="logRatingChange($event)">
+  </ionic3-star-rating>
+</div>
+</ion-content>
+<ion-footer no-border no-shadow style="overflow: hidden; background: #fdf9f9; border-radius: 0 0 24px 24px;">
+  <ion-grid no-padding>
+    <ion-row no-padding>
+      <ion-col>
+          <button color="mycolor" mode="ios" full block clear  ion-button (click)="cancelRate()">No,Thanks</button>
+      </ion-col>
+      <ion-col>
+    <button color="secondary" mode="ios" full block clear ion-button (click)="submitRate()" [disabled]="isclicked">Submit</button>            
+        </ion-col>
+    </ion-row>
+  </ion-grid>  
+  </ion-footer>

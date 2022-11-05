@@ -1,0 +1,45 @@
+page-profile {
+
+    table, th, td {
+        border: 1px solid rgb(10, 103, 180);
+        border-collapse: collapse;
+        
+    }
+    th{
+        background:rgb(10, 103, 180);
+        color: white;
+        
+    }
+    th, td {
+        padding: 5px;
+        text-align: left;
+    }
+    tr{
+        overflow: hidden;
+    }
+
+ion-slides{
+height:auto;
+}
+
+ion-slide{
+padding-top:8px;
+}
+
+.menu-list .item-inner{
+    color:white;
+    padding-top:4px;
+    margin-top:5px; 
+}
+ 
+.toolbar-md-transparent .toolbar-title-md {
+    color: white;
+}
+
+
+.item-md{
+    color:white;
+    margin-top:5px;
+}
+
+}

@@ -1,0 +1,198 @@
+
+
+<ion-content modalEnter="modal-slide-in" modalLeave="modal-slide-out" style="background:linear-gradient(rgb(243, 243, 243),rgb(248, 248, 248),rgb(245, 245, 245));">
+
+  <div style="height:20%; width:100%; border-bottom:2px dashed rgb(219, 219, 219); background:rgba(250, 97, 97, 0); display: flex; flex-direction: row;">
+
+    <div style="width:35%; height:100%; border-right:2px dashed rgb(219, 219, 219); display: flex; flex-direction: row;">
+      <div style="min-width:60px;  background-size: cover; box-shadow:inset -5px -5px 8px 2px #f6f6f6;  height:100%; background-color:rgba(245, 245, 245, 0);"
+        [ngStyle]="{'background-image': 'url(' + post?.photo + ')'}"></div>
+      <div style="width:auto; padding:2px; overflow: hidden; text-transform: capitalize; font-family: cursive; text-overflow: ellipsis; box-sizing: border-box; height:100%; font-size:10px; color: #b59d9d; background-color:rgba(245, 245, 245, 0);">
+        {{ post?.name }}
+        <span style="font-family: Arial; color:rgb(184, 50, 95);">• {{post?.platesLeft}} Left</span>
+      </div>
+    </div>
+
+    <div text-center class="types" style="background:rgba(233, 233, 233, 0); width:20%;" (click)="editPlates();" *ngIf="myorder?.plates&&myorder?.price">
+      <span class="rupee" style=" padding:2px; box-sizing: border-box; font-size:15px;"> {{ netPrice(myorder?.price*myorder?.plates) + 10  }}</span>
+      <span style=" font-size:12px;">{{ myorder?.plates }} Plates </span>
+    </div>
+
+    <div text-center class="types" style="background:rgba(233, 233, 233, 0);" (click)="editServiceType();" *ngIf="myorder?.serviceType; let service;">
+      <span>
+        <ion-icon *ngIf='service == "self"' name='ios-walk'></ion-icon>
+        <ion-icon *ngIf='service == "delivery"' name='bicycle'></ion-icon>
+      </span>
+      <span style="font-size:10px;">{{ service }}</span>
+
+    </div>
+
+    
+    <div text-center class="types" style="background:rgba(233, 233, 233, 0);" (click)="editLocationObj();" *ngIf="myorder?.locationObj; let locObj;">
+        <span>
+            <ion-icon *ngIf='!locObj?.title' name='locate'></ion-icon>
+            <ion-icon *ngIf='locObj?.title' name='pin'></ion-icon>
+          </span>
+          <span *ngIf='!locObj?.title' style="font-size:10px;">current</span>
+          <span *ngIf='locObj?.title' style="font-size:10px;">{{ locObj?.title }}</span>    
+    </div>
+
+    <div text-center class="types" style="background:rgba(233, 233, 233, 0);" (click)="editPaymentType();" *ngIf="myorder?.paymentType; let payment;">
+
+      <span>
+        <ion-icon *ngIf='payment == "now"' name='ios-card'></ion-icon>
+        <ion-icon *ngIf='payment == "cash"' name='cash'></ion-icon>
+      </span>
+      <span style="font-size:10px;">{{ payment }}</span>
+
+    </div>
+
+  </div>
+
+  <div style="height:80%; width:100%;">
+
+    <ion-slides class="swiper-no-swiping" #placeOrderSlider>
+
+      <ion-slide padding>
+
+        <div text-center class="rupee" style="color:rgb(194, 42, 75); display: inline-block; overflow: hidden; padding:5px;  border-radius: 10px; box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.18); font-size:28px; position: relative; margin-top:10%;">
+          {{ netPrice(myorder?.price*plates)}}
+          <sup style="
+          font-size: 11px;
+          color: #9a9898;
+      ">
+      + 10 (delivery)
+      </sup> 
+      <div class="loader"></div>
+        </div>
+
+        <ion-list no-lines style="position: relative; margin-top:2%; margin-bottom:10px; ">
+          <form [formGroup]="slideOneForm">
+            <ion-item style="background: transparent;">
+
+              <div style="width: 80%; display: flex; flex-flow: nowrap; align-items: baseline; background: rgba(201, 45, 71, 0); margin:auto;">
+                <button color="mycolor" large round icon-only float-left clear ion-button (click)="stepdown();">
+                  <ion-icon name="remove"></ion-icon>
+                </button>
+                <input formControlName="plates" readonly text-center style="clear: both; background: transparent; font-size:25px; color:seagreen; border:none; margin: auto;"
+                  id="myplates" type="number" step="1" min="1" max="30" />
+                <button color="mycolor" large round icon-only float-right clear ion-button (click)="stepup();">
+                  <ion-icon name="add"></ion-icon>
+                </button>
+              </div>
+            </ion-item>
+            <button ion-button block mode="ios" color="mycolor" class="order-button" (click)="confirmPlates();">Confirm
+              plates</button>
+
+          </form>
+
+        </ion-list>
+      </ion-slide>
+
+      <ion-slide text-center style="background-color: rgba(255, 255, 255, 0)">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <span class="my-heading">How do you want to receive ?</span>
+            </ion-col>
+          </ion-row>
+          <ion-row nowrap>
+            <ion-col col-6>
+              <button ion-button mode="ios" small color="light" class="soft-button" type="button" (click)="confirmServiceType('delivery');">
+                <ion-icon name='bicycle'></ion-icon>
+                HOME DELIVERY
+                <span class="button-content">the food will be delivered to you at your preferred location in few minutes.</span>
+              </button>
+            </ion-col>
+            <ion-col col-6>
+              <button ion-button  mode="ios" disabled small color="light" class="soft-button" type="button" (click)="confirmServiceType('self');">
+                <ion-icon name='ios-walk'></ion-icon>
+                SELF SERVICE
+                <span class="button-content">preferred for short distances. you will need to go to the seller to receive.</span>
+              </button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+
+
+      </ion-slide>
+
+      <ion-slide padding style="background-color: rgba(255, 255, 255, 0)">
+
+        <span class="my-heading" text-center>Choose your delivery location</span>
+        
+        <ion-scroll scrollX="true" direction="x" style="overflow: scroll;  height:120px; white-space: nowrap; background: rgba(252, 160, 160, 0); ">
+
+      <ion-list no-lines radio-group [(ngModel)]="lokka">
+          <ion-item class="block"  style="display: inline-block; height:95px; width:120px; transition: all 1s;
+          border:1px solid #dadada;  margin:5px 0 5px 5px; border-radius:10px; overflow: hidden; ">
+              <ion-label><ion-icon small name="locate"></ion-icon> current</ion-label>
+              <div item-content class="address-content">{{ post?.currLoc?.address || 'your current location.' }}</div>
+              <ion-radio [value]="post?.currLoc"></ion-radio>
+            </ion-item>
+        <ion-item class="block" *ngFor="let SL of savedLocations | async; let id = index"    style="display: inline-block; height:95px; width:120px; transition: all 1s;
+        border:1px solid #dadada;  margin:5px 0 5px 5px; border-radius:10px; overflow: hidden; ">
+          <ion-label><ion-icon small name="pin"></ion-icon> {{SL.title}}</ion-label>
+          <div item-content class="address-content">{{ SL.address }}</div>
+          <ion-radio [value]="SL"></ion-radio>
+        </ion-item>
+      
+      </ion-list>
+      
+      
+      <div *ngIf="!(savedLocations | async)?.length">
+      <h2 style="color:rgb(170, 170, 170); line-height: 90px;" text-center>No saved locations</h2>
+      </div>
+  
+      </ion-scroll>
+        <button ion-button mode="ios" [disabled]="!lokka" block color="mycolor" class="order-button" type="button" (click)="confirmLocation(lokka);">confirm
+          location</button>
+      </ion-slide>
+
+      <ion-slide style="background-color: rgba(255, 255, 255, 0)">
+        <ion-grid>
+          <ion-row>
+            <ion-col text-center>
+              <span class="my-heading">Choose your preferred Payment Mode ?</span>
+            </ion-col>
+          </ion-row>
+          <ion-row nowrap>
+            <ion-col>
+                <button ion-button [disabled]="!isPaynow" mode="ios" color="light" class="soft-button" type="button" (click)="confirmPaymentType('now');">
+                <ion-icon name='ios-card'></ion-icon>                 
+                  <span>pay now</span>
+                  <span class="button-content">pay now for faster response.</span>              
+                </button> 
+            </ion-col>
+            <ion-col>
+                <button ion-button mode="ios" color="light" class="soft-button" type="button" (click)="confirmPaymentType('cash');">
+                <ion-icon name="cash"></ion-icon>
+                <span>Cash</span>
+                <span class="button-content">pay at the time of receiving.</span>   
+              </button>           
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+      </ion-slide>
+
+      <ion-slide style="background-color: rgba(255, 255, 255, 0); position: relative;">
+        <h2 *ngIf="!orderPlacing&&orderSuccess ; else placing;">ORDER PLACED</h2>
+        <ng-template #placing>
+          <h2>PLACING ORDER</h2>
+        </ng-template>
+        <button *ngIf="orderPlacing" ion-button mode="ios" type="button" class="order-button" color="danger" (click)="cancelOrder();">cancel</button>
+        <div *ngIf="orderPlacing" style="width:100%; height:10px; bottom:0; position: absolute;">
+          <div class="do" style="width:10px; height: 100%; animation-direction: alternate; background:rgb(122, 21, 21); border-radius:100%; position: absolute; left:0; top:0;"></div>
+          <div class="do" style="width:10px; height: 100%; animation-direction: alternate; background:rgb(7, 161, 76); animation-timing-function: ease-in-out; border-radius:100%; position: absolute; left:0; margin-left:30px; top:0;"></div>
+        </div>
+
+      </ion-slide>
+
+    </ion-slides>
+
+  </div>
+
+
+</ion-content>

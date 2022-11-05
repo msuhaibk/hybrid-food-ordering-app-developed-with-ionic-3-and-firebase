@@ -1,0 +1,27 @@
+<ion-header  no-border>
+
+  <ion-navbar no-border color="light">
+    <ion-title><span class="mytitle">Qziine's Buyer</span></ion-title>
+
+    <ion-buttons start>
+      <button ion-button color="mycolor" menuToggle clear icon-only> 
+        <div [style.background-image]="'url(' + (avatar != null ? avatar : './assets/imgs/default-user.png') + ')'" class="myavatar" item-start>
+      </div>
+      </button>
+    </ion-buttons>
+
+  </ion-navbar>
+</ion-header>
+
+<ion-content fullscreen  style="margin:0; padding:0px; overflow:hidden; background-color:rgb(255, 255, 255); ">
+  
+  
+  <super-tabs no-border style="margin-top:0px;" tabsPlacement="top" toolbarBackground="light"  indicatorColor="mycolor">
+      <super-tab *ngFor="let page of pages" [root]="page.pageName" [icon]="page.icon" [id]="page.id"></super-tab>
+    </super-tabs>
+    
+    <div style="position: fixed; bottom: 15px; right:15px; z-index:10000000000000;">
+        <button (touchstart)="vibrat()" (click)="setExplore()" ion-fab large color="mycolor"><ion-icon name="search"></ion-icon></button>
+    </div>
+</ion-content>
+

@@ -1,0 +1,113 @@
+<ion-content style="background:rgba(244, 244, 244, 0.4); padding:10px 0 10px 0; ">
+
+  <ion-list no-lines>
+
+    <div class="faded" style="background: rgba(172, 255, 47, 0); margin-top:1px; width:100%; height:100px;"
+      *ngFor="let order of activeOrders?.slice().reverse()">
+      <button ion-item detail-push (click)='gofoodpage(order.key,null,ordersList.order.foodkey);'
+        style="background: rgb(253, 253, 253); border-radius:2px;  padding:0; width:100%; height:95px;  "
+        *ngIf="(order?.ordersList | async); else loading; let ordersList;">
+        <div class="faded" *ngIf="(ordersList.food | async)?.photo; else fallbackImage; let photo;" text-center
+          [ngStyle]="{'background-image': 'url(' + photo + ')'}"
+          style="background:rgba(255, 192, 203, 0); box-shadow:inset 1px 20px 30px -4px rgba(26, 26, 26, 0.719); color:white; border-radius:0 8px 8px 0; background-size: cover;  display: inline-block; width:70px; height:70px;"
+          item-start>
+          <span style="font-size:9px;">{{myTime(ordersList.order?.orderedAt)}}</span>
+        </div>
+        <ng-template #fallbackImage>
+          <div item-start
+            style="background:rgb(230, 230, 230); color:white; border-radius:0 8px 8px 0; background-size: cover;  display: inline-block; width:70px; height:70px;">
+          </div>
+        </ng-template>
+
+        <ion-grid item-end style="background: rgba(36, 36, 36, 0); padding:0;">
+          <ion-row nowrap style="background:rgba(255, 255, 255, 0);">
+            <ion-col col-12 style=" background:rgba(255, 255, 255, 0); padding:0;">
+              <div text-nowrap style="width:auto; display: inline-block;  ">
+                <div *ngIf="(ordersList.food | async); let food;" class="faded">
+                  <div
+                    style="width:78%; text-overflow:ellipsis; overflow: hidden; float: left; color:rgb(71, 71, 71); font-weight: bold; background:rgba(11, 177, 11, 0); ">
+                    <div class="food-type-icon"
+                      [style.border-color]="food?.type=='veg' ? 'green' : food?.type=='nonveg' ? '#da1d2d' : 'orange'">
+                      <span
+                        [style.background-color]="food?.type=='veg' ? 'green' : food?.type=='nonveg' ? '#da1d2d' : 'orange'"></span>
+                    </div>
+                    {{ food?.name }}
+                  </div>
+                  <div style="background:rgba(160, 46, 46, 0.014); text-overflow:clip; font-weight: lighter; float: right; width:22%; color:rgb(156, 39, 39);">
+                    <span class="rupee"> {{netPrice(ordersList.order?.price*ordersList.order?.plates) + 10}}</span>
+                  </div>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row style="background:rgba(75, 188, 196, 0); padding:0;">
+            <ion-col style="background:rgba(62, 158, 99, 0); padding:0;">
+
+              <div *ngIf="order.status | async; else load; let statuses;" class="faded"
+                style="background: rgba(196, 42, 42, 0);">
+                <div *ngFor="let status of statuses; let lst = last;">
+                  <span *ngIf="lst" text-nowrap style="text-transform: capitalize; ">
+                    <h1 style="font-size:2.1rem;"
+                      [style.color]='(status[0].key == "booked") ? "#03b31b" : (status[0].key == "accepted") ? "#66b4b1" : (status[0].key == "prepared") ? "#db8a54" : (status[0].key == "hampered") ? "#a4b26c" : (status[0].key == "dispatched") ? "#ae6ab4" : (status[0].key == "received") ? "#4c7aa4" : (status[0].key == "cancelled") ? "#c14d4d" : "#c5c46a" '>
+                      {{ status[0].key}}
+                      <sup style="color:rgba(107, 106, 106, 0.514); font-size:11px;">{{myTime(status[0].value)}}</sup>
+                    </h1>
+                  </span>
+                </div>
+              </div>
+              <ng-template #load>
+                <div
+                  style="font-size:2.1rem; overflow: hidden; display:inline-block; color:rgb(233, 233, 233); position: relative; letter-spacing:4px; font-weight: bolder; font-family:Arial, Helvetica, sans-serif;">
+                  STATUS
+                  <div class="do"
+                    style="width:45px; height:90%; position: absolute; top:0; left:0; background:rgb(253, 253, 253); box-shadow:0 0 25px 8px rgb(253, 253, 253);">
+                  </div>
+                </div>
+              </ng-template>
+            </ion-col>
+          </ion-row>
+          <ion-row style="background:rgba(179, 27, 133, 0);  ">
+            <ion-col>
+              <p style="font-size:13px; color:rgb(150, 150, 150);">{{ '#' + ordersList.order?.orderId }} •
+                {{ ordersList.order?.plates }} Plates • <span *ngIf="ordersList.order?.serviceType; let service;">
+                  <ion-icon *ngIf='service == "self"' name='ios-walk'></ion-icon>
+                  <ion-icon *ngIf='service == "delivery"' name='bicycle'></ion-icon>
+                </span></p>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </button>
+      <ng-template #loading>
+        <ion-item style="width:100%; height:95px; padding:0; background: #f5f8fc; position: relative;">
+          <div item-start
+            style="background:#eef1f5; color:white; border-radius:0 8px 8px 0; background-size: cover;  display: inline-block; width:70px; height:70px;">
+          </div>
+          <ion-grid no-padding item-end>
+            <ion-row>
+              <div style="height:4px; width:100%;"></div>
+            </ion-row>
+          </ion-grid>
+          <div class="loader"></div>
+        </ion-item>
+      </ng-template>
+    </div>
+
+
+    <div *ngIf="!activeOrders?.length" text-center>
+      <div class="faded"
+        style="margin:20px auto; background-size:cover; width:170px; height:170px; background-image:url(./assets/imgs/vector-order.png);">
+      </div>
+      <div class="faded" style="
+      font-size: 11px;
+      color: #aaaaaa;
+      font-weight: 900;
+      padding: 4px 20px;
+    ">Good to see you here.<br />Seems like you have'nt placed any orders for a while.<br /> we would love to serve you
+        in a manner you'd love.
+      </div>
+    </div>
+
+  </ion-list>
+
+
+</ion-content>

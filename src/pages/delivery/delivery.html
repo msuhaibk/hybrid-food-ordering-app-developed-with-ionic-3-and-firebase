@@ -1,0 +1,38 @@
+<ion-header no-border>
+
+  <ion-navbar>
+    <ion-title>{{(orders | async)?.length}}  Deliveries</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-list no-lines>
+    <ion-item *ngFor="let order of orders | async" style="border: 2px solid #b8b7b7; margin-top:5px; background: #f7f7f7;">
+<div *ngIf="order.value | async; let value;">
+  <div style="font-weight: bolder; color:#808080;">#{{value?.orderId || 'OrderId'}} ({{value?.date | date: 'MMM d, y, h:mm a'}}) </div>
+  <div  style="color:rgb(38, 83, 119); white-space: normal;">
+    <span style="font-weight:bold;">Pickup:</span><br/>
+    <span *ngIf="value?.pickAddr | async; let pick;">
+        {{ (pick?.subAddress || ' ') + '=>' + pick?.address}}
+    </span>
+  </div>
+<div style="color:rgb(57, 119, 38); white-space: normal;">
+    <span style="font-weight:bold;">Delivery:</span><br/>
+    {{ (value?.delAddr?.subAddress || ' ') + '=>' + value?.delAddr?.address }}
+</div>
+<br/>
+<button ion-button color="myorange" *ngIf="!value?.orderDispatched" mode="ios" small (click)="promptPickupCode(order.orderKey,value?.orderId)">Pickup</button>
+<button ion-button color="mycolor" mode="ios" small (click)="promptDeliverCode(order.orderKey,value?.orderId,order.key)">Deliver</button>
+</div>
+    </ion-item>
+  </ion-list>
+
+  <div text-center *ngIf="!((orders | async)?.length > 0)">waiting for orders...</div>
+ <div text-center>
+   <button ion-button (click)="goback()">back</button>
+ </div>
+
+
+</ion-content>

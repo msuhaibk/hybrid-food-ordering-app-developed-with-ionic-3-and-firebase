@@ -1,0 +1,89 @@
+<ion-menu no-border [content]="content" persistent="true" type="overlay" enable-menu-with-back-views=“true”>
+
+  <ion-header no-border>
+
+    <ion-navbar color="transparent">
+      <ion-title text-center color="light" style="font-family:cursive; color:white;">Qziine</ion-title>
+    </ion-navbar>
+
+  </ion-header>
+
+
+  <ion-content style="background-color:rgb(202, 27, 65); background-image: url('./assets/imgs/vector-background2.png'); background-size: 280px;">
+
+    <button *ngIf="profiled | async; else loadprofile; let profile;" ion-item detail-none (click)="goEditPage()" color="transwhite" no-lines>
+      <div text-center [style.background-image]="'url(' + (profile.dp != null ? profile.dp : './assets/imgs/default-user.png') + ')'"
+        style="background:rgba(255, 192, 203, 0); box-shadow:inset 0 0 14px 4px rgba(255, 255, 255, 0.05); color:white; border-radius:100%; background-size: cover;  display: inline-block; width:65px; height:65px;"
+        item-start>
+      </div>
+      <ion-grid style="color:white;" item-end>
+        <ion-row>
+          <h2>{{ profile.fname  + ' ' + profile.lname }}</h2>
+        </ion-row>
+        <ion-row>
+          <h3>{{ profile.phoneNumber || '+91**********'}}</h3>
+        </ion-row>
+      </ion-grid>
+    </button>
+    <ng-template #loadprofile>
+    <button ion-item detail-none color="transwhite" no-lines>
+      <div text-center style="background:url('./assets/imgs/default-user.png'); color:white; border-radius:100%; background-size: cover;  display: inline-block; width:65px; height:65px;"
+        item-start>
+      </div>
+      <ion-grid style="color:white;" item-end>
+        <ion-row>
+          <h2>Username.</h2>
+        </ion-row>
+        <ion-row>
+          <h3>PhoneNumber.</h3>
+        </ion-row>
+      </ion-grid>
+    </button>
+  </ng-template>
+
+    <br/><br/>
+    <br/>
+
+
+    <ion-list no-lines class="menu-list">
+      <button ion-item color="transwhite" detail-none (click)="goNotificationsPage()">
+        <ion-icon name="md-notifications" item-start></ion-icon>
+        Notifications
+      </button>
+      <button ion-item color="transwhite" detail-none (click)="goSavedLocationsPage()">
+        <ion-icon name="pin" item-start></ion-icon>
+        Saved Locations
+      </button>
+      <button ion-item color="transwhite" detail-none (click)="usertype()">
+        <ion-icon name="md-swap" item-start></ion-icon>
+        Change Usertype
+      </button>
+      <button ion-item color="transwhite" detail-none (click)="goAboutPage()">
+        <ion-icon name="md-information-circle" item-start></ion-icon>
+        About Quisine
+      </button>
+      <button ion-item color="transwhite" detail-none (click)="goFaqsFeedbackPage()">
+        <ion-icon name="md-clipboard" item-start></ion-icon>
+        FAQs
+      </button>
+      <button ion-item color="transwhite" detail-none (click)='signout()'>
+        <ion-icon name="md-log-out" item-start></ion-icon>
+        Sign Out
+      </button>
+    </ion-list>
+    <div style="width: 100%; font-size: 11px;text-align: center;color: rgba(255, 255, 255, 0.59);">
+      <br/><br/>
+        Version: {{app_version}}
+      </div>
+
+    <div style="width: 100%;position:absolute;bottom: 10px;font-size: 11px;text-align: center;color: rgba(255, 255, 255, 0.59);">
+    Designed And Developed by <a style="color: rgba(255, 255, 255, 0.59); font-weight: bold;" href="#" (click)="developer()">Suhaib</a>
+    </div>
+
+  </ion-content>
+
+
+</ion-menu>
+
+
+<ion-nav id="nav" #content [root]="rootPage"></ion-nav>

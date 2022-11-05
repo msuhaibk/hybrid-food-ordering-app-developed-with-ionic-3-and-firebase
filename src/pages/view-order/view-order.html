@@ -1,0 +1,131 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>view-order | #{{orderId}}</ion-title>
+    <ion-buttons right>
+      <button ion-button icon-only clear (click)="orderActions()">
+          <ion-icon name="more"></ion-icon>
+        </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <div *ngIf="orderData | async; else load; let od;">
+
+      <div style="width:100%; height:min-content;">
+          <div class="details-title">ITEM DETAILS</div>
+          <button *ngIf="od.food | async; else fud; let food;" ion-item no-lines no-details (click)="goProfile(result)" style="padding:0; width:100%; ">
+              <div text-center [style.background-image]="'url(' + food.photo + ')'" style="background:rgba(255, 192, 203, 0); margin-left:3px; background: rgb(231, 209, 209);  border-radius:2px; background-size: cover;  display: inline-block; width:50px; height:50px;" item-start  >
+              </div>
+              <ion-grid item-end style="background: rgba(194, 196, 42, 0); padding:0;">
+                <ion-row nowrap style="background:rgba(255, 255, 255, 0);">
+                  <ion-col col-12 style=" background:rgba(255, 255, 255, 0); padding:0;">
+                  <div text-wrap  style="width:auto; display: inline-block; ">
+                    <div text-wrap style="width:100%; float: left; font-size: 15px; color:rgb(80, 80, 80); background:rgba(11, 177, 11, 0); ">
+                    {{food.name}}
+                    </div>
+                  </div>
+                  </ion-col>
+                </ion-row>       
+              </ion-grid>
+            </button>
+            <ng-template #fud>
+                <div text-center><ion-spinner></ion-spinner> loading item...</div>
+           </ng-template>
+      </div>
+      <br/>
+    <div style="width:100%; height:min-content; min-height:200px;">
+      <div class="details-title">ORDER DETAILS</div>
+      <div class="order-details-line">
+        <div class="order-details-text" float-left>Order ID</div>
+        <div class="order-details-value" float-right>#{{orderId || 'NA'}}</div>
+      </div>
+      <div class="order-details-line">
+        <div class="order-details-text" float-left>Order Date</div>
+        <div class="order-details-value" float-right>{{ od.order?.orderedAt | date:'medium'  }}</div>
+      </div>
+      <div class="order-details-line">
+          <div class="order-details-text" float-left>Service Type</div>
+          <div class="order-details-value" float-right>{{ od.order?.serviceType }}</div>
+        </div>
+        <div class="order-details-line">
+          <div class="order-details-text" float-left>Pickup Code</div>
+          <div class="order-details-value" float-right>{{ od.order?.pickCode || 'N/A'}}</div>
+        </div>
+      <div class="order-details-line">
+        <div class="order-details-text" float-left>Price per plate</div>
+        <div class="order-details-value  rupee" float-right> {{ od.order?.price}}</div>
+      </div>
+      <div class="order-details-line">
+        <div class="order-details-text" float-left>Plates Ordered</div>
+        <div class="order-details-value" float-right>{{ od.order?.plates}}</div>
+      </div>
+      <div class="order-details-line">
+        <div class="order-details-text" float-left>Net Price</div>
+        <div class="order-details-value  rupee" float-right> {{ od.order?.netPrice}}</div>
+      </div>
+      <div class="order-details-line">
+        <div class="order-details-text" float-left>Payment Mode</div>
+        <div class="order-details-value" float-right>{{ od.order?.paymentType}}</div>
+      </div>
+      <div class="order-details-line">
+        <div class="order-details-text" float-left>Payment status</div>
+        <div class="order-details-value" float-right>
+          <div *ngIf="od.paymentDone | async; else pay; let payment;">
+            Paid
+          </div>
+          <ng-template #pay>
+              Unpaid
+            </ng-template>
+        </div>
+      </div>
+
+      <div class="order-details-line">
+        <div class="order-details-text" float-left>Order status</div>
+        <div class="order-details-value" *ngFor="let stat of od.status | async; let lst=last;" float-right>
+          <span *ngIf="lst">{{ stat[0].key }}<sup style="font-size:10px; color:rgb(148, 148, 148);">{{ stat[0].value | date:'M/d/yy, h:mm a' }}</sup></span>
+        </div>
+      </div>
+
+    </div>
+
+    <br/>
+
+    <div  style="width:100%; height:min-content;">
+        <div class="details-title">BUYER DETAILS</div>
+      <button *ngIf="od.buyer | async; else buy; let buyer;" ion-item no-lines no-details (click)="goProfile(result)" style="padding:0; width:100%; ">
+          <div text-center [style.background-image]="'url(' + (buyer[0]?.dp != null ? buyer[0]?.dp : './assets/imgs/default-user.png') + ')'" style="background:rgba(255, 192, 203, 0); margin-left:3px; background: rgb(235, 235, 235);  border-radius:100%; background-size: cover;  display: inline-block; width:60px; height:60px;" item-start  >
+          </div>
+          <ion-grid item-end style="background: rgba(194, 196, 42, 0); padding:0;">
+            <ion-row nowrap style="background:rgba(255, 255, 255, 0);">
+              <ion-col col-12 style=" background:rgba(255, 255, 255, 0); padding:0;">
+              <div text-nowrap  style="width:auto; display: inline-block; ">
+                <div  style="width:100%; float: left; text-transform: capitalize; font-size: 16px; color:rgb(71, 71, 71); background:rgba(11, 177, 11, 0); ">
+                  {{buyer[0]?.fname}} {{buyer[0]?.lname}}
+                </div>
+                <div text-wrap style="width:100%; float: left; font-size: 12px; color:rgb(122, 122, 122); background:rgba(11, 177, 11, 0); ">
+                <ion-icon name="pin"></ion-icon> {{od.order?.locationObj?.address || 'Contact buyer for their address'}}
+                </div>
+              </div>
+              </ion-col>
+            </ion-row>       
+          </ion-grid>
+        </button>
+        <ng-template #buy>
+           <div text-center><ion-spinner></ion-spinner> loading buyer...</div>
+          </ng-template>
+    </div>
+    
+
+  </div>
+
+
+  <ng-template #load>
+   <div text-center> <ion-spinner></ion-spinner></div>
+  </ng-template>
+
+</ion-content>
